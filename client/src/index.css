@@ -1,4 +1,7 @@
 @import "tailwindcss";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
 
 @theme {
   /* Colors - Use --color-* prefix for auto-generation of bg-, text-, border- classes */
@@ -61,6 +64,13 @@
   --color-sidebar-accent-foreground: hsl(158 64% 30%);
   --color-sidebar-border: hsl(40 15% 90%);
   --color-sidebar-ring: hsl(158 64% 40%);
+
+  /* Charts (keep or customize later) */
+  --chart-1: hsl(158 64% 40%);
+  --chart-2: hsl(35 90% 55%);
+  --chart-3: hsl(200 80% 50%);
+  --chart-4: hsl(280 65% 60%);
+  --chart-5: hsl(10 75% 55%);
 }
 
 @layer components {
@@ -96,5 +106,41 @@
       background-color: var(--color-accent);
       transform: translateY(-2px);
     }
+  }
+}
+
+.dark {
+  --background: hsl(220 25% 10%);
+  --foreground: hsl(0 0% 100%);
+
+  --card: hsl(220 25% 14%);
+  --card-foreground: hsl(0 0% 100%);
+
+  --popover: hsl(220 25% 14%);
+  --popover-foreground: hsl(0 0% 100%);
+
+  --primary: hsl(158 64% 45%);
+  --primary-foreground: hsl(0 0% 100%);
+
+  --secondary: hsl(35 90% 60%);
+  --secondary-foreground: hsl(0 0% 100%);
+
+  --muted: hsl(220 20% 20%);
+  --muted-foreground: hsl(220 10% 65%);
+
+  --accent: hsl(158 30% 20%);
+  --accent-foreground: hsl(158 64% 80%);
+
+  --border: hsl(220 20% 25%);
+  --input: hsl(220 20% 25%);
+  --ring: hsl(158 64% 45%);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
   }
 }
