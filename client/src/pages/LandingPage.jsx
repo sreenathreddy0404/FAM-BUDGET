@@ -55,7 +55,7 @@ const LandingPage = () => {
 						</p>
 						<div className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4">
 							<Link to="/dashboard">
-								<button className="btn-gradient-primary text-lg px-8 py-6">
+								<button className="btn-gradient-primary">
 									Start Tracking Free
 									<ChevronRight className="w-5 h-5 ml-2" />
 								</button>
