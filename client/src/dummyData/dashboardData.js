@@ -10,7 +10,7 @@ export const monthlySpendingData = [
 export const statCardsData = [
     {
         id: 1,
-        title: "Total Expenses",
+        title: "Total Expenses This Month",
         value: "$2,700.00",
         change: "+5.2% from last month",
         changeType: "positive",
@@ -54,4 +54,13 @@ export const familyMembersData = [
   { name: "Mom", avatar: "👩", totalSpent: 980, lastExpense: "Whole Foods - $89.75", trend: "down" , trendValue: "-8%" },
   { name: "Alex", avatar: "👦", totalSpent: 320, lastExpense: "Steam Games - $29.99", trend: "up" , trendValue: "+5%" },
   { name: "Emma", avatar: "👧", totalSpent: 150, lastExpense: "Books - $24.99", trend: "down" , trendValue: "-15%" },
+];
+
+export const benefits = [
+  "Single account for the whole family",
+  "No manual data entry with invoice OCR",
+  "Monthly and yearly spending insights",
+  "Privacy-first - invoice images never stored",
+  "Member-wise expense breakdown",
+  "Simple and intuitive interface",
 ];

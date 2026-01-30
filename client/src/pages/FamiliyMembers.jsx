@@ -12,6 +12,9 @@ import {
 import { Plus, Edit2, Trash2, TrendingUp, TrendingDown } from "lucide-react";
 import { toast } from "react-hot-toast";
 import { familyMembersData } from '../dummyData/dashboardData';
+import { Button } from '@/components/ui/button';
+import { Label } from '@/components/ui/label';
+import { Input } from '@/components/ui/input';
 
 const avatarOptions = ["👨", "👩", "👦", "👧", "👴", "👵", "🧑", "👶"];
 
@@ -68,10 +71,10 @@ const FamilyMembers = () => {
           </div>
           <Dialog open={isOpen} onOpenChange={setIsOpen}>
             <DialogTrigger asChild>
-              <button className="btn-gradient-primary">
+              <Button className="btn-gradient-primary">
                 <Plus className="w-4 h-4 mr-2" />
                 Add Member
-              </button>
+              </Button>
             </DialogTrigger>
             <DialogContent className="sm:max-w-md">
               <DialogHeader>
@@ -79,8 +82,8 @@ const FamilyMembers = () => {
               </DialogHeader>
               <div className="space-y-6 pt-4">
                 <div>
-                  <label htmlFor="name">Name</label>
-                  <input
+                  <Label htmlFor="name">Name</Label>
+                  <Input
                     id="name"
                     value={newName}
                     onChange={(e) => setNewName(e.target.value)}
@@ -92,7 +95,7 @@ const FamilyMembers = () => {
                   <p>Choose Avatar</p>
                   <div className="flex flex-wrap gap-2 mt-2">
                     {avatarOptions.map((avatar) => (
-                      <button
+                      <Button
                         key={avatar}
                         onClick={() => setSelectedAvatar(avatar)}
                         className={`w-12 h-12 rounded-xl text-2xl flex items-center justify-center transition-all ${
@@ -102,7 +105,7 @@ const FamilyMembers = () => {
                         }`}
                       >
                         {avatar}
-                      </button>
+                      </Button>
                     ))}
                   </div>
                 </div>

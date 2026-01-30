@@ -10,14 +10,16 @@ import {
   Menu,
   X,
   Wallet,
+  Clock,
 } from "lucide-react";
 
 const navItems = [
   { icon: LayoutDashboard, label: "Dashboard", path: "/dashboard" },
   { icon: Users, label: "Family Members", path: "/family" },
   { icon: PlusCircle, label: "Add Expense", path: "/add-expense" },
-  { icon: Receipt, label: "All Expenses", path: "/expenses" },
+  { icon: Receipt, label: "All Expenses", path: "/all-expenses" },
   { icon: BarChart3, label: "Analytics", path: "/analytics" },
+  { icon: Clock,label: "Spending History", path: "/spending-history" },
 ];
 
 export const Sidebar = () => {

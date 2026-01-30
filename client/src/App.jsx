@@ -5,6 +5,13 @@ import Colors from "./pages/Colors.jsx";
 import LandingPage from "./pages/LandingPage.jsx";
 import Dashboard from "./pages/Dashboard.jsx";
 import FamiliyMembers from "./pages/FamiliyMembers.jsx";
+import AddExpense from "./pages/AddExpense.jsx";
+import AllExpenses from "./pages/AllExpenses.jsx";
+import Analytics from "./pages/Analytics.jsx";
+import Auth from "./pages/Auth.jsx";
+import PageNotFound from "./pages/PageNotFound.jsx";
+import SpendingHistory from "./pages/SpendingHistory.jsx";
+
 function App() {
 	return (
 		<div className="App">
@@ -13,6 +20,12 @@ function App() {
 				<Route path="/colors" element={<Colors />} />
 				<Route path="/dashboard" element={<Dashboard />} />
 				<Route path="/family" element={<FamiliyMembers />} />
+				<Route path="/add-expense" element={<AddExpense />} />
+				<Route path="/all-expenses" element={<AllExpenses />} />
+				<Route path="/analytics" element={<Analytics />} />
+				<Route path="/auth" element={<Auth />} />
+				<Route path="/spending-history" element={<SpendingHistory />} />
+				<Route path="*" element={<PageNotFound />} />
 			</Routes>
 		</div>
 	);
