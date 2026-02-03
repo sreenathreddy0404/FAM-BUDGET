@@ -1,6 +1,7 @@
 const express = require('express');
 const dotenv = require('dotenv').config();
 const authRoutes = require('./routes/authRoutes');
+const FamilyMemberRoutes = require('./routes/FamilyMemberRoutes');
 const connectToDB = require('./configs/db');
 
 const app = express();
@@ -11,6 +12,7 @@ connectToDB();
 //Middleware to parse JSON bodies
 app.use(express.json());
 app.use('/api/auth',authRoutes);
+app.use('/api/family-members',FamilyMemberRoutes);
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
