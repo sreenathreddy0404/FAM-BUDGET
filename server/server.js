@@ -5,6 +5,7 @@ const FamilyMemberRoutes = require('./routes/FamilyMemberRoutes');
 const ExpenseRoutes = require('./routes/expenseRoutes');
 const connectToDB = require('./configs/db');
 const authMiddleware = require('./middlewares/authMiddleware');
+const cors = require('cors');
 
 const app = express();
 
@@ -13,6 +14,14 @@ connectToDB();
 
 //Middleware to parse JSON bodies
 app.use(express.json());
+const corsOptions = {
+  origin: 'http://localhost:5173',
+  methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+};
+
+app.use(cors(corsOptions));
+
 app.use('/api/auth',authRoutes);
 app.use('/api/family-members',authMiddleware,FamilyMemberRoutes);
 app.use('/api/expenses',authMiddleware,ExpenseRoutes);

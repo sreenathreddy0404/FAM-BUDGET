@@ -50,10 +50,10 @@ export const recentExpensesData = [
 
 
 export const familyMembersData = [
-  { name: "Dad", avatar: "👨", totalSpent: 1250, lastExpense: "Walmart - $125.50", trend: "up" , trendValue: "+12%" },
-  { name: "Mom", avatar: "👩", totalSpent: 980, lastExpense: "Whole Foods - $89.75", trend: "down" , trendValue: "-8%" },
-  { name: "Alex", avatar: "👦", totalSpent: 320, lastExpense: "Steam Games - $29.99", trend: "up" , trendValue: "+5%" },
-  { name: "Emma", avatar: "👧", totalSpent: 150, lastExpense: "Books - $24.99", trend: "down" , trendValue: "-15%" },
+  { id: "1", name: "Dad", avatar: "👨", totalSpent: 1250, lastExpense: "Walmart - $125.50", trend: "up" , trendValue: "+12%" },
+  { id: "2", name: "Mom", avatar: "👩", totalSpent: 980, lastExpense: "Whole Foods - $89.75", trend: "down" , trendValue: "-8%" },
+  { id: "3", name: "Alex", avatar: "👦", totalSpent: 320, lastExpense: "Steam Games - $29.99", trend: "up" , trendValue: "+5%" },
+  { id: "4", name: "Emma", avatar: "👧", totalSpent: 150, lastExpense: "Books - $24.99", trend: "down" , trendValue: "-15%" },
 ];
 
 export const benefits = [

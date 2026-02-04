@@ -11,6 +11,7 @@ import Analytics from "./pages/Analytics.jsx";
 import Auth from "./pages/Auth.jsx";
 import PageNotFound from "./pages/PageNotFound.jsx";
 import SpendingHistory from "./pages/SpendingHistory.jsx";
+import ProtectedLayout from "./components/layouts/ProtectedLayout.jsx";
 
 function App() {
 	return (
@@ -18,14 +19,17 @@ function App() {
 			<Routes>
 				<Route path="/" element={<LandingPage />} />
 				<Route path="/colors" element={<Colors />} />
-				<Route path="/dashboard" element={<Dashboard />} />
-				<Route path="/family" element={<FamiliyMembers />} />
-				<Route path="/add-expense" element={<AddExpense />} />
-				<Route path="/all-expenses" element={<AllExpenses />} />
-				<Route path="/analytics" element={<Analytics />} />
 				<Route path="/auth" element={<Auth />} />
-				<Route path="/spending-history" element={<SpendingHistory />} />
-				<Route path="*" element={<PageNotFound />} />
+				
+				<Route element={<ProtectedLayout/>}>
+					<Route path="/dashboard" element={<Dashboard />} />
+					<Route path="/family" element={<FamiliyMembers />} />
+					<Route path="/add-expense" element={<AddExpense />} />
+					<Route path="/all-expenses" element={<AllExpenses />} />
+					<Route path="/analytics" element={<Analytics />} />
+					<Route path="/spending-history" element={<SpendingHistory />} />
+					<Route path="*" element={<PageNotFound />} />
+				</Route>
 			</Routes>
 		</div>
 	);

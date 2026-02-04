@@ -7,8 +7,11 @@ import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Wallet, Mail, Lock, User, ArrowLeft } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { loginUser,registerUser } from "@/api/api";
+import { useAuth } from "@/context/AuthContext";
 
 const Auth = () => {
+  const { login } = useAuth();
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const [isSignUp, setIsSignUp] = useState(searchParams.get("mode") === "signup");
@@ -23,11 +26,43 @@ const Auth = () => {
     setIsSignUp(searchParams.get("mode") === "signup");
   }, [searchParams]);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async(e) => {
     e.preventDefault();
-    // Frontend only - no actual authentication
-    console.log("Form submitted:", formData);
-    navigate("/dashboard");
+    try{
+      if(isSignUp){
+          const { name, email, password, confirmPassword } = formData;
+          if (password !== confirmPassword) {
+            alert("Passwords do not match!");
+            return;
+          }
+
+          // Handle sign up logic here
+          const userData = { name, email, password };
+          const response = await registerUser(userData);
+          console.log(response.data);
+          if(response.data.success){
+            login(response.data.token,response.data.username);
+            alert("Registration successful.");
+            navigate("/dashboard");
+          }else{
+            alert("Registration failed: " + response.data.message);
+          }
+      } else {
+        // Handle sign in logic here
+        const { email, password } = formData;
+        const userData = { email, password };
+        const response = await loginUser(userData);
+        if(response.data.success){
+          login(response.data.token,response.data.username);
+          alert("Login successful.");
+          navigate("/dashboard");
+        } else{
+          alert("Login failed: " + response.data.message);
+        }
+      }
+    }catch(e){
+      alert("Login failed: " + (e.response?.data?.message || e.message));
+    }
   };
 
   const handleChange = (e) => {
@@ -88,6 +123,7 @@ const Auth = () => {
                         value={formData.name}
                         onChange={handleChange}
                         className="pl-10"
+                        autoComplete="name"
                         required
                       />
                     </div>
@@ -106,6 +142,7 @@ const Auth = () => {
                       value={formData.email}
                       onChange={handleChange}
                       className="pl-10"
+                      autoComplete="email"
                       required
                     />
                   </div>
@@ -123,6 +160,7 @@ const Auth = () => {
                       value={formData.password}
                       onChange={handleChange}
                       className="pl-10"
+                      autoComplete="password"
                       required
                     />
                   </div>
@@ -141,6 +179,7 @@ const Auth = () => {
                         value={formData.confirmPassword}
                         onChange={handleChange}
                         className="pl-10"
+                        autoComplete="new-password"
                         required
                       />
                     </div>
