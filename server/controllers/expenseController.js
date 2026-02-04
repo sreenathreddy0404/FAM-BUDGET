@@ -3,7 +3,8 @@ const Expense = require('../models/Expense');
 // Create a new expense
 const createExpense = async (req, res) => {
     try {
-        const { name, amount, date, category, memberId, userId } = req.body;
+        const { name, amount, date, category, memberId } = req.body;
+        const userId = req.userId;
         const expense = await Expense.create({ name, amount, date, category, memberId, userId });
         res.status(201).json({ success: true, message: "Expense created successfully!", expense });
     } catch (e) {
@@ -14,7 +15,7 @@ const createExpense = async (req, res) => {
 // Get all expenses for a user
 const getExpenses = async (req, res) => {
     try {
-        const { userId } = req.params;
+        const userId = req.userId;
         const expenses = await Expense.find({ userId }).populate('memberId').sort({ date: 1 });
         res.status(200).json({ success: true, expenses });
     } catch (e) {
@@ -25,7 +26,8 @@ const getExpenses = async (req, res) => {
 // Update an expense
 const updateExpense = async (req, res) => {
     try {
-        const { id, userId } = req.params;
+        const { id } = req.params;
+        const userId = req.userId;
         const { name, amount, date, category, memberId } = req.body;
         const expense = await Expense.findOneAndUpdate(
             { _id: id, userId },
@@ -44,7 +46,8 @@ const updateExpense = async (req, res) => {
 // Delete an expense
 const deleteExpense = async (req, res) => {
     try {
-        const { id, userId } = req.params;
+        const { id } = req.params;
+        const userId = req.userId;
         const expense = await Expense.findOneAndDelete({ _id: id, userId });
         if (!expense) {
             return res.status(404).json({ success: false, message: "Expense not found or unauthorized access" });
@@ -57,7 +60,8 @@ const deleteExpense = async (req, res) => {
 
 const getExpensesByYearAndMonth = async (req, res) => {
     try {
-        const { userId, year, month } = req.params;
+        const { year, month } = req.params;
+        const userId = req.userId;
         const startDate = new Date(year, month - 1, 1);
         const endDate = new Date(year, month, 0, 23, 59, 59);
         const expenses = await Expense.find({
@@ -75,7 +79,8 @@ const getExpensesByYearAndMonth = async (req, res) => {
 
 const getExpensesByYear = async (req, res) => {
     try {
-        const { userId, year } = req.params;
+        const { year } = req.params;
+        const userId = req.userId;
         const startDate = new Date(year, 0, 1);
         const endDate = new Date(year, 11, 31, 23, 59, 59);
         const expenses = await Expense.find({

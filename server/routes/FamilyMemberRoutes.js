@@ -4,9 +4,9 @@ const { addFamilyMember, getFamilyMembers, getFamilyMember, deleteFamilyMember, 
 const router = express.Router();
 
 router.post('/', addFamilyMember);
-router.get('/:userId', getFamilyMembers);
-router.get('/:id/:userId', getFamilyMember);
-router.delete('/:id/:userId', deleteFamilyMember);
-router.put('/:id/:userId', updateFamilyMember);
+router.get('/', getFamilyMembers);
+router.get('/:id', getFamilyMember);
+router.delete('/:id', deleteFamilyMember);
+router.put('/:id', updateFamilyMember);
 
 module.exports = router;
