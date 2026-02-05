@@ -56,13 +56,13 @@ const LandingPage = () => {
 							insights that help you save.
 						</p>
 						<div className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4">
-							<Link to="/auth">
+							<Link to="/dashboard">
 								<Button className="btn-gradient-primary">
 									Start Tracking Free
 									<ChevronRight className="w-5 h-5 ml-2" />
 								</Button>
 							</Link>
-							<Link to="/auth">
+							<Link to="/dashboard">
 								<Button variant="outline">
 									See Demo Analytics
 								</Button>

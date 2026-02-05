@@ -64,3 +64,42 @@ export const benefits = [
   "Member-wise expense breakdown",
   "Simple and intuitive interface",
 ];
+
+const array = [
+        {
+            "id": "6981f03961dcea24f9099887",
+            "name": "Mom",
+            "avatar": "👩",
+            "totalSpent": 0,
+            "lastExpense": "No expenses yet",
+            "trend": "up",
+            "trendValue": "0%"
+        },
+        {
+            "id": "6981f13efa12dcb947629cdb",
+            "name": "Dad",
+            "avatar": "👨",
+            "totalSpent": 0,
+            "lastExpense": "No expenses yet",
+            "trend": "up",
+            "trendValue": "0%"
+        },
+        {
+            "id": "6981f1fafa12dcb947629cdf",
+            "name": "Alex",
+            "avatar": "👦",
+            "totalSpent": 0,
+            "lastExpense": "No expenses yet",
+            "trend": "up",
+            "trendValue": "0%"
+        },
+        {
+            "id": "6981fc109b24c40c3c1fdecd",
+            "name": "Emma",
+            "avatar": "👧",
+            "totalSpent": 0,
+            "lastExpense": "No expenses yet",
+            "trend": "up",
+            "trendValue": "0%"
+        }
+    ]

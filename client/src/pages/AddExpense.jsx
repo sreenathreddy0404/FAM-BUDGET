@@ -18,26 +18,26 @@ import { familyMembers as members } from "@/dummyData/allExpensesData";
 
 
 export const categoryIcons = {
-	GROCERIES: ShoppingCart,
-	DINING: Utensils,
-	TRANSPORT: Car,
-	UTILITIES: Zap,
-	HEALTHCARE: HeartPulse,
-	ENTERTAINMENT: Film,
-	SHOPPING: ShoppingBag,
-	EDUCATION: GraduationCap,
-	OTHER: MoreHorizontal,
+	Groceries: ShoppingCart,
+	Dining: Utensils,
+	Transport: Car,
+	Utilities: Zap,
+	Healthcare: HeartPulse,
+	Entertainment: Film,
+	Shopping: ShoppingBag,
+	Education: GraduationCap,
+	Other: MoreHorizontal,
 };
 export const categories = [
-    { value: "GROCERIES", label: "Groceries"},
-    { value: "DINING", label: "Dining"},
-    { value: "TRANSPORT", label: "Transport"},
-    { value: "UTILITIES", label: "Utilities"},
-    { value: "HEALTHCARE", label: "Healthcare"},
-    { value: "ENTERTAINMENT", label: "Entertainment"},
-    { value: "SHOPPING", label: "Shopping"},
-    { value: "EDUCATION", label: "Education"},
-    { value: "OTHER", label: "Other"},
+    { value: "Groceries", label: "Groceries"},
+    { value: "Dining", label: "Dining"},
+    { value: "Transport", label: "Transport"},
+    { value: "Utilities", label: "Utilities"},
+    { value: "Healthcare", label: "Healthcare"},
+    { value: "Entertainment", label: "Entertainment"},
+    { value: "Shopping", label: "Shopping"},
+    { value: "Education", label: "Education"},
+    { value: "Other", label: "Other"},
 ];
 
 const AddExpense = () => {

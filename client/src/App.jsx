@@ -12,10 +12,12 @@ import Auth from "./pages/Auth.jsx";
 import PageNotFound from "./pages/PageNotFound.jsx";
 import SpendingHistory from "./pages/SpendingHistory.jsx";
 import ProtectedLayout from "./components/layouts/ProtectedLayout.jsx";
+import { Toaster } from "react-hot-toast";
 
 function App() {
 	return (
 		<div className="App">
+			<Toaster position="bottom-right" reverseOrder={false} />
 			<Routes>
 				<Route path="/" element={<LandingPage />} />
 				<Route path="/colors" element={<Colors />} />

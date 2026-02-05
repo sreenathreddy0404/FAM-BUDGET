@@ -1,203 +1,243 @@
-import React from 'react'
-import { AppLayout } from '../components/layouts/AppLayout'
-import { useState } from "react";
+import React, { useState } from "react";
+import { AppLayout } from "../components/layouts/AppLayout";
 import { motion } from "framer-motion";
 import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
+	Dialog,
+	DialogContent,
+	DialogHeader,
+	DialogTitle,
+	DialogTrigger,
 } from "@/components/ui/dialog";
 import { Plus, Edit2, Trash2, TrendingUp, TrendingDown } from "lucide-react";
-import { toast } from "react-hot-toast";
-import { familyMembersData } from '../dummyData/dashboardData';
-import { Button } from '@/components/ui/button';
-import { Label } from '@/components/ui/label';
-import { Input } from '@/components/ui/input';
+import toast from "react-hot-toast";
+import { Button } from "@/components/ui/button";
+import { Label } from "@/components/ui/label";
+import { Input } from "@/components/ui/input";
+import { useFamily } from "../context/FamilyContext";
 
 const avatarOptions = ["👨", "👩", "👦", "👧", "👴", "👵", "🧑", "👶"];
 
 const FamilyMembers = () => {
-  const [members, setMembers] = useState(familyMembersData);
-  const [isOpen, setIsOpen] = useState(false);
-  const [newName, setNewName] = useState("");
-  const [selectedAvatar, setSelectedAvatar] = useState("👨");
+	const {
+		familyMembers,
+		addFamilyMember,
+		updateFamilyMember,
+		deleteFamilyMember,
+		loading,
+	} = useFamily();
 
-  const handleAddMember = () => {
-    if (!newName.trim()) {
-      toast.error("Please enter a name");
-      return;
-    }
+	// ADD
+	const [isAddOpen, setIsAddOpen] = useState(false);
+	const [newName, setNewName] = useState("");
+	const [selectedAvatar, setSelectedAvatar] = useState("👨");
 
-    const newMember = {
-      id: Date.now().toString(),
-      name: newName,
-      avatar: selectedAvatar,
-      totalSpent: 0,
-      trend: "down",
-      trendValue: "0%",
-    };
+	// EDIT
+	const [isEditOpen, setIsEditOpen] = useState(false);
+	const [editMemberId, setEditMemberId] = useState(null);
+	const [editName, setEditName] = useState("");
+	const [editAvatar, setEditAvatar] = useState("👨");
 
-    setMembers([...members, newMember]);
-    setNewName("");
-    setSelectedAvatar("👨");
-    setIsOpen(false);
-    toast.success(`${newName} has been added to your family!`);
-  };
+	const handleAddMember = async () => {
+		if (!newName.trim()) return toast.error("Please enter a name");
 
-  const handleDeleteMember = (id, name) => {
-    const member = members.find((m) => m.id === id);
-    if (member && member.totalSpent > 0) {
-      toast.error(`Cannot delete ${name} - they have existing expenses`);
-      return;
-    }
-    setMembers(members.filter((m) => m.id !== id));
-    toast.success(`${name} has been removed`);
-  };
+		await addFamilyMember({ name: newName, avatar: selectedAvatar });
 
-  return (
-    <AppLayout>
-      <div className="max-w-4xl mx-auto">
-        {/* Header */}
-        <div className="flex items-center justify-between mb-8">
-          <div>
-            <h1 className="text-2xl lg:text-3xl font-bold text-foreground">
-              Family Members
-            </h1>
-            <p className="text-muted-foreground mt-1">
-              Manage your family members and their spending
-            </p>
-          </div>
-          <Dialog open={isOpen} onOpenChange={setIsOpen}>
-            <DialogTrigger asChild>
-              <Button className="btn-gradient-primary">
-                <Plus className="w-4 h-4 mr-2" />
-                Add Member
-              </Button>
-            </DialogTrigger>
-            <DialogContent className="sm:max-w-md">
-              <DialogHeader>
-                <DialogTitle>Add Family Member</DialogTitle>
-              </DialogHeader>
-              <div className="space-y-6 pt-4">
-                <div>
-                  <Label htmlFor="name">Name</Label>
-                  <Input
-                    id="name"
-                    value={newName}
-                    onChange={(e) => setNewName(e.target.value)}
-                    placeholder="Enter name"
-                    className="mt-2"
-                  />
-                </div>
-                <div>
-                  <p>Choose Avatar</p>
-                  <div className="flex flex-wrap gap-2 mt-2">
-                    {avatarOptions.map((avatar) => (
-                      <Button
-                        key={avatar}
-                        onClick={() => setSelectedAvatar(avatar)}
-                        className={`w-12 h-12 rounded-xl text-2xl flex items-center justify-center transition-all ${
-                          selectedAvatar === avatar
-                            ? "bg-primary ring-2 ring-primary ring-offset-2"
-                            : "bg-accent hover:bg-accent/80"
-                        }`}
-                      >
-                        {avatar}
-                      </Button>
-                    ))}
-                  </div>
-                </div>
-                <button onClick={handleAddMember} className="w-full btn-gradient-primary">
-                  Add Member
-                </button>
-              </div>
-            </DialogContent>
-          </Dialog>
-        </div>
+		toast.success(`${newName} added`);
+		setNewName("");
+		setSelectedAvatar("👨");
+		setIsAddOpen(false);
+	};
 
-        {/* Members Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {members.map((member, index) => (
-            <motion.div
-              key={member.id}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.3, delay: 0.1 * index }}
-              className="card-elevated p-6"
-            >
-              <div className="flex items-start justify-between">
-                <div className="flex items-center gap-4">
-                  <div className="w-16 h-16 rounded-2xl bg-accent flex items-center justify-center text-3xl">
-                    {member.avatar}
-                  </div>
-                  <div>
-                    <h3 className="text-xl font-semibold text-foreground">
-                      {member.name}
-                    </h3>
-                    <p className="text-sm text-muted-foreground">
-                      Family Member
-                    </p>
-                  </div>
-                </div>
-                <div className="flex gap-2">
-                  <button className="p-2 rounded-lg hover:bg-accent transition-colors">
-                    <Edit2 className="w-4 h-4 text-muted-foreground" />
-                  </button>
-                  <button
-                    onClick={() => handleDeleteMember(member.id, member.name)}
-                    className="p-2 rounded-lg hover:bg-destructive/10 transition-colors"
-                  >
-                    <Trash2 className="w-4 h-4 text-destructive" />
-                  </button>
-                </div>
-              </div>
-              <div className="mt-6 pt-4 border-t border-border grid grid-cols-2 gap-4">
-                <div>
-                  <p className="text-xs text-muted-foreground">Total Spent</p>
-                  <p className="text-xl font-bold text-foreground">
-                    ${member.totalSpent.toLocaleString()}
-                  </p>
-                </div>
-                <div className="text-right">
-                  <p className="text-xs text-muted-foreground">Trend</p>
-                  <div
-                    className={`flex items-center justify-end gap-1 text-lg font-semibold ${
-                      member.trend === "up" ? "text-destructive" : "text-success"
-                    }`}
-                  >
-                    {member.trend === "up" ? (
-                      <TrendingUp className="w-5 h-5" />
-                    ) : (
-                      <TrendingDown className="w-5 h-5" />
-                    )}
-                    {member.trendValue}
-                  </div>
-                </div>
-              </div>
-            </motion.div>
-          ))}
-        </div>
+	const openEditDialog = (member) => {
+		setEditMemberId(member.id);
+		setEditName(member.name);
+		setEditAvatar(member.avatar);
+		setIsEditOpen(true);
+	};
 
-        {members.length === 0 && (
-          <div className="text-center py-12">
-            <div className="text-6xl mb-4">👨‍👩‍👧‍👦</div>
-            <h3 className="text-xl font-semibold text-foreground mb-2">
-              No family members yet
-            </h3>
-            <p className="text-muted-foreground mb-6">
-              Add your first family member to start tracking expenses
-            </p>
-            <Button onClick={() => setIsOpen(true)} className="btn-gradient-primary">
-              <Plus className="w-4 h-4 mr-2" />
-              Add Your First Member
-            </Button>
-          </div>
-        )}
-      </div>
-    </AppLayout>
-  );
+	const handleUpdateMember = async () => {
+		if (!editName.trim()) return toast.error("Name cannot be empty");
+
+		await updateFamilyMember(editMemberId, {
+			name: editName,
+			avatar: editAvatar,
+		});
+
+		toast.success("Member updated");
+		setIsEditOpen(false);
+	};
+
+	const handleDeleteMember = async (member) => {
+		if (member.lastExpense !== "No expenses yet") {
+			return toast.error("Cannot delete member with expenses");
+		}
+
+		if (!confirm(`Delete ${member.name}?`)) return;
+
+		try {
+			await deleteFamilyMember(member.id);
+			toast.success(`${member.name} deleted`);
+		} catch {
+			toast.error("Failed to delete member");
+		}
+	};
+
+	return (
+		<AppLayout>
+			<div className="max-w-4xl mx-auto">
+				{/* HEADER */}
+				<div className="flex justify-between items-center mb-8">
+					<div>
+						<h1 className="text-2xl font-bold">Family Members</h1>
+						<p className="text-muted-foreground">
+							Manage your family members
+						</p>
+					</div>
+
+					{/* ADD MEMBER */}
+					<Dialog open={isAddOpen} onOpenChange={setIsAddOpen}>
+						<DialogTrigger asChild>
+							<Button className="btn-gradient-primary">
+								<Plus className="w-4 h-4 mr-2" />
+								Add Member
+							</Button>
+						</DialogTrigger>
+
+						<DialogContent>
+							<DialogHeader>
+								<DialogTitle>Add Family Member</DialogTitle>
+							</DialogHeader>
+
+							<Label>Name</Label>
+							<Input
+								value={newName}
+								onChange={(e) => setNewName(e.target.value)}
+							/>
+
+							<p className="mt-4">Avatar</p>
+							<div className="flex gap-2 flex-wrap">
+								{avatarOptions.map((a) => (
+									<Button
+										key={a}
+										onClick={() => setSelectedAvatar(a)}
+										className={`text-xl ${a === selectedAvatar ? "bg-primary" : "bg-accent"}`}
+									>
+										{a}
+									</Button>
+								))}
+							</div>
+
+							<Button onClick={handleAddMember}>Add</Button>
+						</DialogContent>
+					</Dialog>
+				</div>
+
+				{/* MEMBERS */}
+				{loading && <p>Loading...</p>}
+
+				<div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+					{familyMembers.map((member, index) => (
+						<motion.div
+							key={member.id || member._id}
+							initial={{ opacity: 0, y: 20 }}
+							animate={{ opacity: 1, y: 0 }}
+							transition={{ delay: index * 0.1 }}
+							className="card-elevated p-6"
+						>
+							<div className="flex justify-between">
+								<div className="flex gap-4">
+									<div className="text-3xl">
+										{member.avatar}
+									</div>
+									<div>
+										<h3 className="font-semibold text-xl">
+											{member.name}
+										</h3>
+										<p className="text-sm text-muted-foreground">
+											Family Member
+										</p>
+									</div>
+								</div>
+
+								<div className="flex gap-2">
+									<Button
+										size="icon"
+										variant="ghost"
+										onClick={() => openEditDialog(member)}
+									>
+										<Edit2 />
+									</Button>
+									<Button
+										size="icon"
+										variant="ghost"
+										onClick={() =>
+											handleDeleteMember(member)
+										}
+									>
+										<Trash2 className="text-destructive" />
+									</Button>
+								</div>
+							</div>
+
+							<div className="mt-4 grid grid-cols-2 border-t pt-4">
+								<div>
+									<p className="text-xs text-muted-foreground">
+										Total Spent
+									</p>
+									<p className="font-bold">
+										${member.totalSpent?.toLocaleString()}
+									</p>
+								</div>
+								<div className="text-right">
+									<p className="text-xs text-muted-foreground">
+										Trend
+									</p>
+									<div className="flex justify-end gap-1">
+										{member.trend === "up" ? (
+											<TrendingUp />
+										) : (
+											<TrendingDown />
+										)}
+										{member.trendValue}
+									</div>
+								</div>
+							</div>
+						</motion.div>
+					))}
+				</div>
+
+				{/* EDIT DIALOG */}
+				<Dialog open={isEditOpen} onOpenChange={setIsEditOpen}>
+					<DialogContent>
+						<DialogHeader>
+							<DialogTitle>Edit Member</DialogTitle>
+						</DialogHeader>
+
+						<Label>Name</Label>
+						<Input
+							value={editName}
+							onChange={(e) => setEditName(e.target.value)}
+						/>
+
+						<p className="mt-4">Avatar</p>
+						<div className="flex gap-2 flex-wrap">
+							{avatarOptions.map((a) => (
+								<Button
+									key={a}
+									onClick={() => setEditAvatar(a)}
+									className={`text-xl ${a === editAvatar ? "bg-primary" : "bg-accent"}`}
+								>
+								{a}
+								</Button>
+							))}
+						</div>
+
+						<Button onClick={handleUpdateMember}>Update</Button>
+					</DialogContent>
+				</Dialog>
+			</div>
+		</AppLayout>
+	);
 };
 
 export default FamilyMembers;

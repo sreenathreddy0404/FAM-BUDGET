@@ -4,11 +4,14 @@ import App from "./App";
 import "./index.css";
 import { BrowserRouter } from "react-router-dom";
 import { AuthProvider } from "./context/AuthContext";
+import { FamilyProvider } from "./context/FamilyContext";
 
 ReactDOM.createRoot(document.getElementById("root")).render(
 	<AuthProvider>
-		<BrowserRouter>
-			<App />
-		</BrowserRouter>
+		<FamilyProvider>
+			<BrowserRouter>
+				<App />
+			</BrowserRouter>
+		</FamilyProvider>
 	</AuthProvider>,
 );

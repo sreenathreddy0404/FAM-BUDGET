@@ -28,3 +28,13 @@ api.interceptors.response.use((response)=>response,
 
 export const registerUser = (userData) => api.post('/auth/register', userData);
 export const loginUser = (userData) => api.post('/auth/login', userData);
+
+//expenses routes
+export const addExpense = (expenseData) => api.post('/expenses', expenseData);
+export const getExpenses = () => api.get('/expenses');
+
+//family members routes
+export const addFamilyMember = (memberData) => api.post('/family-members', memberData);
+export const getFamilyMembers = () => api.get('/family-members');
+export const updateFamilyMember = (id, memberData) => api.put(`/family-members/${id}`, memberData); 
+export const deleteFamilyMember = (id) => api.delete(`/family-members/${id}`);
