@@ -16,40 +16,39 @@ const addFamilyMember = async(req,res)=>{
 const getFamilyMembers = async (req, res) => {
   try {
     const userId = req.userId;
-
     const familyMembers = await FamilyMember.find({ userId }).sort({ createdAt: 1 });
 
     const now = new Date();
     const startOfCurrentMonth = new Date(now.getFullYear(), now.getMonth(), 1);
-    const startOfLastMonth    = new Date(now.getFullYear(), now.getMonth() - 1, 1);
-    const startOfNextMonth    = new Date(now.getFullYear(), now.getMonth() + 1, 1);
+    const startOfLastMonth = new Date(now.getFullYear(), now.getMonth() - 1, 1);
+    const startOfNextMonth = new Date(now.getFullYear(), now.getMonth() + 1, 1);
 
     const response = await Promise.all(
       familyMembers.map(async (member) => {
+        
+        //helper function
         const getTotal = async (from, to) => {
           const agg = await Expense.aggregate([
-            { $match: { familyMemberId: member._id, createdAt: { $gte: from, $lt: to } } },
+            { $match: {memberId: member._id, date: { $gte: from, $lt: to } } },
             { $group: { _id: null, total: { $sum: "$amount" } } }
           ]);
           return agg.length ? agg[0].total : 0;
         };
 
         const currentMonthSpent = await getTotal(startOfCurrentMonth, startOfNextMonth);
-        const lastMonthSpent    = await getTotal(startOfLastMonth, startOfCurrentMonth);
+        const lastMonthSpent = await getTotal(startOfLastMonth, startOfCurrentMonth);
 
-        const lastExpense = await Expense.findOne({ familyMemberId: member._id }).sort({ createdAt: -1 });
+        
+        const lastExpense = await Expense.findOne({ memberId: member._id }).sort({ date: -1 });
 
+        // Trend Calculation
         let trend = "up", trendValue = "0%";
-
         if (lastMonthSpent === 0 && currentMonthSpent > 0) {
           trendValue = "+100%";
-        } else if (lastMonthSpent === 0 && currentMonthSpent === 0) {
-          trendValue = "0%";
-        } else if (currentMonthSpent >= lastMonthSpent) {
-          trendValue = `+${(((currentMonthSpent - lastMonthSpent) / lastMonthSpent) * 100).toFixed(2)}%`;
-        } else {
-          trend = "down";
-          trendValue = `-${(((lastMonthSpent - currentMonthSpent) / lastMonthSpent) * 100).toFixed(2)}%`;
+        } else if (lastMonthSpent > 0) {
+          const diff = ((currentMonthSpent - lastMonthSpent) / lastMonthSpent) * 100;
+          trend = diff >= 0 ? "up" : "down";
+          trendValue = `${diff >= 0 ? "+" : ""}${diff.toFixed(2)}%`;
         }
 
         return {
@@ -57,7 +56,7 @@ const getFamilyMembers = async (req, res) => {
           name: member.name,
           avatar: member.avatar,
           totalSpent: currentMonthSpent,
-          lastExpense: lastExpense? `${lastExpense.store} - $${lastExpense.amount}`: "No expenses yet",
+          lastExpense: lastExpense ? `${lastExpense.name} - $${lastExpense.amount}` : "No expenses yet",
           trend,
           trendValue,
         };
@@ -69,7 +68,6 @@ const getFamilyMembers = async (req, res) => {
     res.status(500).json({ success: false, message: "Server error", error: e.message });
   }
 };
-
 
 const deleteFamilyMember = async(req,res)=>{
     try{

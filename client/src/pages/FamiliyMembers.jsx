@@ -15,7 +15,7 @@ import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { useFamily } from "../context/FamilyContext";
 
-const avatarOptions = ["👨", "👩", "👦", "👧", "👴", "👵", "🧑", "👶"];
+const avatarOptions = ["👨", "👩", "👦", "👧", "👴", "👵", "🧑", "👶", "🏠", "🐶","🐱"];
 
 const FamilyMembers = () => {
 	const {
@@ -192,7 +192,7 @@ const FamilyMembers = () => {
 									<p className="text-xs text-muted-foreground">
 										Trend
 									</p>
-									<div className="flex justify-end gap-1">
+									<div className={`flex justify-end gap-1 ${member.trend == "up"?"text-destructive":"text-primary"}`}>
 										{member.trend === "up" ? (
 											<TrendingUp />
 										) : (

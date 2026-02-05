@@ -10,6 +10,7 @@ import {
 } from "@/components/ui/select";
 import { ShoppingBag, Utensils, Car, Zap, Film, Search, Filter,HeartPulse,ShoppingCart,GraduationCap,MoreHorizontal } from "lucide-react";
 import { allExpenses,familyMembers } from "@/dummyData/allExpensesData";
+import { Input } from "@/components/ui/input";
 
 export const categoryIcons = {
 	Groceries: ShoppingCart,
@@ -74,7 +75,7 @@ const Expenses = () => {
           <div className="flex flex-col md:flex-row gap-4">
             <div className="relative flex-1">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-              <input
+              <Input
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
                 placeholder="Search expenses..."
