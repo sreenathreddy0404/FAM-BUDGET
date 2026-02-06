@@ -1,9 +1,11 @@
 import {AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer} from 'recharts';
-import { monthlySpendingData } from '../../dummyData/dashboardData';
+import { monthlySpendingData as data} from '../../dummyData/dashboardData';
 import { motion } from 'framer-motion';
+import { getYearlyData } from '@/utils/usefulFunctions';
 
-const data = monthlySpendingData;
-const MontlySpendingChart = () => {
+const MontlySpendingChart = ({expensesData}) => {
+  const year = new Date().getFullYear();
+  const data = getYearlyData(year,expensesData);
   return (
 		<motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -62,4 +64,4 @@ const MontlySpendingChart = () => {
   );
 }
 
-export default MontlySpendingChart
+export default MontlySpendingChart;

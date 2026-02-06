@@ -4,7 +4,7 @@ import ExpenseCard from '../ui/ExpenseCard';
 import { recentExpensesData as expenses } from '../../dummyData/dashboardData';
 import { Link } from 'react-router-dom';
 
-const RecentTransactions = () => {
+const RecentTransactions = ({expenses}) => {
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -20,7 +20,7 @@ const RecentTransactions = () => {
       </div>
       <div className="space-y-4">
         {expenses.map((expense, index) => {
-          return <ExpenseCard key={expense.id} expense={expense} index={index} />
+          return <ExpenseCard key={expense._id} expense={expense} index={index} />
         })}
       </div>
     </motion.div>

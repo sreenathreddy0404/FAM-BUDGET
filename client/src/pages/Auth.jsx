@@ -9,6 +9,7 @@ import { Wallet, Mail, Lock, User, ArrowLeft } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { loginUser,registerUser } from "@/api/api";
 import { useAuth } from "@/context/AuthContext";
+import toast from "react-hot-toast";
 
 const Auth = () => {
   const { login } = useAuth();
@@ -32,7 +33,7 @@ const Auth = () => {
       if(isSignUp){
           const { name, email, password, confirmPassword } = formData;
           if (password !== confirmPassword) {
-            alert("Passwords do not match!");
+            toast.error("Passwords do not match!");
             return;
           }
 
@@ -42,10 +43,10 @@ const Auth = () => {
           console.log(response.data);
           if(response.data.success){
             login(response.data.token,response.data.username);
-            alert("Registration successful.");
+            toast.success("Registration successful.");
             navigate("/dashboard");
           }else{
-            alert("Registration failed: " + response.data.message);
+            toast.error("Registration failed: " + response.data.message);
           }
       } else {
         // Handle sign in logic here
@@ -54,14 +55,14 @@ const Auth = () => {
         const response = await loginUser(userData);
         if(response.data.success){
           login(response.data.token,response.data.username);
-          alert("Login successful.");
+          toast.success("Login successful.");
           navigate("/dashboard");
         } else{
-          alert("Login failed: " + response.data.message);
+          toast.error("Login failed: " + response.data.message);
         }
       }
     }catch(e){
-      alert("Login failed: " + (e.response?.data?.message || e.message));
+      toast.error("Login failed: " + (e.response?.data?.message || e.message));
     }
   };
 

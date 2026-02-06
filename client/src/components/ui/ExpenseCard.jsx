@@ -62,7 +62,7 @@ const ExpenseCard = ({ expense, index }) => {
                         {expense.name}
                     </p>
                     <p className="text-xs text-muted-foreground">
-                        {expense.member} • {formatDate(expense.date)}
+                        {expense.memberId.name} • {formatDate(expense.date)}
                     </p>
                 </div>
                 <p className="font-semibold text-foreground">

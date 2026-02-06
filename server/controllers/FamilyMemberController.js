@@ -48,7 +48,7 @@ const getFamilyMembers = async (req, res) => {
         } else if (lastMonthSpent > 0) {
           const diff = ((currentMonthSpent - lastMonthSpent) / lastMonthSpent) * 100;
           trend = diff >= 0 ? "up" : "down";
-          trendValue = `${diff >= 0 ? "+" : ""}${diff.toFixed(2)}%`;
+          trendValue = `${diff >= 0 ? "+" : "-"}${diff.toFixed(2)}%`;
         }
 
         return {

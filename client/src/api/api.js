@@ -32,9 +32,14 @@ export const loginUser = (userData) => api.post('/auth/login', userData);
 //expenses routes
 export const addExpense = (expenseData) => api.post('/expenses', expenseData);
 export const getExpenses = () => api.get('/expenses');
+export const getExpensesByYear = (year) => api.get(`/expenses/year/${year}`);
+export const getExpensesByYearAndMonth = (year,month) => api.get(`/expenses/year-month/${year}/${month}`);
 
 //family members routes
 export const addFamilyMember = (memberData) => api.post('/family-members', memberData);
 export const getFamilyMembers = () => api.get('/family-members');
 export const updateFamilyMember = (id, memberData) => api.put(`/family-members/${id}`, memberData); 
 export const deleteFamilyMember = (id) => api.delete(`/family-members/${id}`);
+
+//dashboard routes
+export const getDashboardData = ()=>api.get('/dashboard/statsdata');

@@ -71,7 +71,7 @@ const getExpensesByYearAndMonth = async (req, res) => {
                 $lte: endDate
             }
         }).populate('memberId');
-        res.status(200).json({ success: true, expenses });
+        res.status(200).json({ success: true, data:expenses });
     } catch (e) {
         return res.status(500).json({ success: false, message: "Server error", error: e.message });
     }
@@ -90,7 +90,7 @@ const getExpensesByYear = async (req, res) => {
                 $lte: endDate
             }
         }).populate('memberId');
-        res.status(200).json({ success: true, expenses });
+        res.status(200).json({ success: true, data:expenses });
     } catch (e) {
         return res.status(500).json({ success: false, message: "Server error", error: e.message });
     }

@@ -1,16 +1,53 @@
-import React from 'react'
+import React, { useEffect,useState } from 'react'
 import { motion } from 'framer-motion';
-import { CreditCard, TrendingUp, User, Wallet } from 'lucide-react';
-
 import { AppLayout } from '../components/layouts/AppLayout';
 import StatCard from '../components/dashboard/StatCard';
 import { statCardsData } from '../dummyData/dashboardData';
 import MonthlySpendingChart from '../components/dashboard/MontlySpendingChart';
 import RecentTransactions from '../components/dashboard/RecentTransactions';
 import FamilyDetails from '../components/dashboard/FamilyDetails';
+import { getDashboardData, getExpensesByYear } from '@/api/api';
+import {
+	Wallet,
+	CalendarDays,
+	TrendingUp,
+	History,
+	Zap,
+	BarChart3,
+	Receipt,
+	Users,
+} from "lucide-react";
 
 const Dashboard = () => {
-  return (
+	const [dashboardData, setDashboardData] = useState(null);
+	const [expensesData,setExpensesData] = useState([]);
+
+	useEffect(() => {
+	const fetchData = async () => {
+		const res = await getDashboardData();
+		setDashboardData(res.data.data);
+
+		const res2 = await getExpensesByYear(new Date().getFullYear());
+		setExpensesData(res2.data.data);
+	};
+	fetchData();
+	}, []);
+
+	const statCardsData = dashboardData? [
+		{ id: 1, label: "This Month Expenses", value: dashboardData["This Month Expenses"], icon: Wallet },
+		{ id: 2, label: "Previous Month Expenses", value: dashboardData["Previous Month Expenses"], icon: History },
+		{ id: 3, label: "This Year Expenses", value: dashboardData["This Year Expenses"], icon: TrendingUp },
+		{ id: 4, label: "Previous Year Expenses", value: dashboardData["Previous Year Expenses"], icon: CalendarDays },
+		{ id: 5, label: "Daily Average Expenses", value: dashboardData["Daily Average Expenses"], icon: Zap },
+		{ id: 6, label: "Monthly Average Expenses", value: dashboardData["Monthly Average Expenses"], icon: BarChart3 },
+		{ id: 7, label: "Total Transactions", value: dashboardData["Total Transactions"], icon: Receipt },
+		{ id: 8, label: "Total Members", value: dashboardData["Total Members"], icon: Users },
+		]
+	: [];
+
+	const recentExpenses = dashboardData?.recentExpenses || [];
+	
+  	return (
 		<AppLayout>
 			<div className="min-h-screen pt-10 lg:pt-0">
 				<div className="mb-7">
@@ -32,16 +69,14 @@ const Dashboard = () => {
 				</div>
 
 				{/* stats data can go here*/}
-				<div className="grid lg:grid-cols-4 md:grid-cols-2 sm:grid-cols-1 gap-4">
+				<div className="grid lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1 gap-4">
 					{statCardsData.map(
-						({ id, title, value, change, changeType, icon }) => (
+						({ id, label, value, icon }) => (
 							<StatCard
 								key={id}
-								title={title}
+								title={label}
 								value={value}
-								change={change}
-								changeType={changeType}
-								icon={icon === "Wallet"? Wallet: icon === "TrendingUp"? TrendingUp: icon === "CreditCard"? CreditCard: icon === "Users"? User: null}
+								icon={icon}
 							/>
 						),
 					)}
@@ -49,8 +84,8 @@ const Dashboard = () => {
 
 				{/* Chart and recent transactions can go here */}
 				<div className='mt-7 grid lg:grid-cols-2 md:grid-cols-1 gap-4'>
-					<MonthlySpendingChart />
-					<RecentTransactions />
+					<MonthlySpendingChart expensesData = {expensesData}/>
+					<RecentTransactions expenses = {recentExpenses}/>
 				</div>
 
 				{/* Family Details */}
@@ -59,7 +94,7 @@ const Dashboard = () => {
 				</div>
 			</div>
 		</AppLayout>
-  );
+  	);
 }
 
 export default Dashboard
