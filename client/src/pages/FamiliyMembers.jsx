@@ -135,6 +135,25 @@ const FamilyMembers = () => {
 				{/* MEMBERS */}
 				{loading && <p>Loading...</p>}
 
+				{/* No FamilyMembers created */}
+				{familyMembers.length == 0 && (
+						<div className="flex flex-col items-center justify-center h-80 text-center p-8">
+							<div className="w-20 h-20 rounded-full bg-gradient-to-br from-gray-100 to-gray-200 flex items-center justify-center mb-6">
+								<span className="text-4xl">👨‍👩‍👧‍👦</span>
+							</div>
+
+							<h3 className="text-xl font-semibold text-gray-800 mb-2">
+								No Family Members Yet
+							</h3>
+
+							<p className="text-gray-600 mb-6 max-w-sm">
+								Add your family members to see individual spending
+								patterns and insights.
+							</p>
+						</div>
+					)
+				}
+
 				<div className="grid grid-cols-1 md:grid-cols-2 gap-4">
 					{familyMembers.map((member, index) => (
 						<motion.div
@@ -192,7 +211,9 @@ const FamilyMembers = () => {
 									<p className="text-xs text-muted-foreground">
 										Trend
 									</p>
-									<div className={`flex justify-end gap-1 ${member.trend == "up"?"text-destructive":"text-primary"}`}>
+									<div
+										className={`flex justify-end gap-1 ${member.trend == "up" ? "text-destructive" : "text-primary"}`}
+									>
 										{member.trend === "up" ? (
 											<TrendingUp />
 										) : (
@@ -227,7 +248,7 @@ const FamilyMembers = () => {
 									onClick={() => setEditAvatar(a)}
 									className={`text-xl ${a === editAvatar ? "bg-primary" : "bg-accent"}`}
 								>
-								{a}
+									{a}
 								</Button>
 							))}
 						</div>

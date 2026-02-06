@@ -1,56 +1,82 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { AppLayout } from "../components/layouts/AppLayout";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { ShoppingBag, Utensils, Car, Zap, Film, Search, Filter,HeartPulse,ShoppingCart,GraduationCap,MoreHorizontal } from "lucide-react";
+import { Select,SelectContent,SelectItem,SelectTrigger,SelectValue,} from "@/components/ui/select";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { ShoppingBag, Search, Filter, Trash2, Edit2 } from "lucide-react";
 import { allExpenses,familyMembers } from "@/dummyData/allExpensesData";
 import { Input } from "@/components/ui/input";
-
-export const categoryIcons = {
-	Groceries: ShoppingCart,
-	Dining: Utensils,
-	Transport: Car,
-	Utilities: Zap,
-	Healthcare: HeartPulse,
-	Entertainment: Film,
-	Shopping: ShoppingBag,
-	Education: GraduationCap,
-	Other: MoreHorizontal,
-};
-
-export const categoryColors = {
-	Groceries: "bg-green-100 text-green-600",
-	Dining: "bg-orange-100 text-orange-600",
-	Transport: "bg-blue-100 text-blue-600",
-	Utilities: "bg-yellow-100 text-yellow-700",
-	Healthcare: "bg-red-100 text-red-600",
-	Entertainment: "bg-purple-100 text-purple-600",
-	Shopping: "bg-pink-100 text-pink-600",
-	Education: "bg-indigo-100 text-indigo-600",
-	Other: "bg-gray-100 text-gray-600",
-};
-
-
+import { Button } from "@/components/ui/button";
+import { Label } from "@/components/ui/label";
+import { categories,categoryColors,categoryIcons } from "@/utils/usefulFunctions";
+import { getExpenses, updateExpense, deleteExpense } from "@/api/api";
+import { useFamily } from "@/context/FamilyContext";
+import { formatDate, yyyyMMddFormat } from "../utils/formatDate";
+import toast from "react-hot-toast";
 
 const Expenses = () => {
   const [search, setSearch] = useState("");
   const [memberFilter, setMemberFilter] = useState("all");
   const [categoryFilter, setCategoryFilter] = useState("all");
+  const [allExpenses, setAllExpenses] = useState([]);
 
-  const filteredExpenses = allExpenses.filter((expense) => {
+  //Edit
+  const [isEditOpen,setIsEditOpen] = useState(false);
+  const [name, setName] = useState("");
+  const [amount, setAmount] = useState("");
+  const [category, setCategory] = useState("");
+  const [date, setDate] = useState(new Date().toISOString().split("T")[0]);
+  const [memberId,setMemberId] = useState("");
+  const [expenseId,setExpenseId] = useState("");
+
+  const { familyMembers } = useFamily();
+  useEffect(()=>{
+    const fetchData = async ()=>{
+      const res = await getExpenses();
+      setAllExpenses(res.data.data);
+    }
+    fetchData();
+  },[]);
+  const filteredExpenses = allExpenses?.filter((expense) => {
     const matchesSearch = expense.name.toLowerCase().includes(search.toLowerCase());
-    const matchesMember = memberFilter === "all" || expense.member === memberFilter;
+    const matchesMember = memberFilter === "all" || expense.memberId._id === memberFilter;
     const matchesCategory = categoryFilter === "all" || expense.category === categoryFilter;
     return matchesSearch && matchesMember && matchesCategory;
-  });
-
+  }) || [];
   const totalAmount = filteredExpenses.reduce((sum, exp) => sum + exp.amount, 0);
+
+  const openEditDialog = (expense)=>{
+    setName(expense.name);
+    setAmount(expense.amount);
+    setCategory(expense.category);
+    setDate(yyyyMMddFormat(expense.date));
+    setMemberId(expense.memberId._id);
+    setExpenseId(expense._id);
+    setIsEditOpen(true);
+  }
+  const handleUpdateExpense = async ()=>{
+    if(!name.trim() || !amount || !category || !memberId || !date){
+      return toast.error("All Fields are required");
+    }
+
+    await updateExpense(expenseId,{name,amount,category,date,memberId});
+
+    toast.success("Expense updated Successfully");
+    setIsEditOpen(false);
+    return;
+  }
+
+  const handleDeleteExpense = async(id)=>{
+      if(!confirm("Are you Sure to Delete the expense"))return;
+      
+      try{
+        await deleteExpense(id);
+        window.location.reload();
+        toast.success("Expense deleted successfully");
+      }catch(e){
+        toast.error("Failed to delete Expense");
+      }
+  }
 
   return (
     <AppLayout>
@@ -90,7 +116,7 @@ const Expenses = () => {
                 <SelectItem value="all">All Members</SelectItem>
                 {
                     familyMembers.map((member) => (
-                        <SelectItem key={member.name} value={member.name}>
+                        <SelectItem key={member.name} value={member.id}>
                             {member.avatar} {member.name}
                         </SelectItem>
                     ))
@@ -150,38 +176,44 @@ const Expenses = () => {
             const Icon = categoryIcons[expense.category] || ShoppingBag;
             const colorClass = categoryColors[expense.category] || "bg-muted text-muted-foreground";
             
-            return (
-              <motion.div
-                key={expense.id}
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.3, delay: 0.05 * index }}
-                className="flex items-center gap-4 p-4 hover:bg-accent/30 transition-colors"
-              >
-                <div className={`w-12 h-12 rounded-xl flex items-center justify-center ${colorClass}`}>
-                  <Icon className="w-6 h-6" />
+            return <motion.div
+              key={expense._id}
+              initial={{ opacity: 0, x: -20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.3, delay: 0.05 * index }}
+              className="group flex items-center gap-4 p-4 hover:bg-accent transition-colors"
+            >
+              <div className={`w-12 h-12 rounded-xl flex items-center justify-center ${colorClass}`}>
+                <Icon className="w-6 h-6" />
+              </div>
+
+              <div className="flex-1 min-w-0">
+                <p className="font-medium text-foreground truncate">
+                  {expense.name}
+                </p>
+                <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                  <span>{expense.memberId.avatar}</span>
+                  <span>{expense.memberId.name}</span>
+                  <span>•</span>
+                  <span>{formatDate(expense.date)}</span>
                 </div>
-                <div className="flex-1 min-w-0">
-                  <p className="font-medium text-foreground truncate">
-                    {expense.name}
-                  </p>
-                  <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                    <span>{expense.avatar}</span>
-                    <span>{expense.member}</span>
-                    <span>•</span>
-                    <span>{expense.date}</span>
-                  </div>
-                </div>
-                <div className="text-right">
-                  <p className="font-bold text-foreground">
-                    -${expense.amount.toFixed(2)}
-                  </p>
-                  <p className="text-xs text-muted-foreground">
-                    {expense.category}
-                  </p>
-                </div>
-              </motion.div>
-            );
+              </div>
+
+              <div className="text-right">
+                <p className="font-bold text-foreground">
+                  -${expense.amount.toFixed(2)}
+                </p>
+                <p className="text-xs text-muted-foreground">
+                  {expense.category}
+                </p>
+              </div>
+
+              {/* Hover Actions */}
+              <div className="hidden group-hover:flex gap-5 items-center ml-10 transition-all duration-500">
+                <Trash2 className="w-5 h-5 text-destructive cursor-pointer" onClick={()=>{handleDeleteExpense(expense._id)}}/>
+                <Edit2 className="w-5 h-5 text-gray-500 cursor-pointer" onClick={()=>{openEditDialog(expense)}}/>
+              </div>
+            </motion.div>
           })}
 
           {filteredExpenses.length === 0 && (
@@ -196,6 +228,101 @@ const Expenses = () => {
             </div>
           )}
         </motion.div>
+
+        {/* Edit Dialog */}
+        <Dialog open={isEditOpen} onOpenChange={setIsEditOpen}>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Edit Expense</DialogTitle>
+            </DialogHeader>
+
+            <form onSubmit={handleUpdateExpense} className="space-y-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="md:col-span-2">
+                    <Label htmlFor="store" className="my-3">Store Name</Label>
+                    <Input
+                      id="name"
+                      value={name}
+                      onChange={(e) => setName(e.target.value)}
+                      placeholder="e.g., Walmart, Shell Gas Station"
+                      className="my-3"
+                    />
+                  </div>
+
+                  <div>
+                    <Label htmlFor="amount">Amount ($)</Label>
+                    <Input
+                      id="amount"
+                      type="number"
+                      step="0.01"
+                      min="0"
+                      value={amount}
+                      onChange={(e) => setAmount(e.target.value)}
+                      placeholder="0.00"
+                      className="my-3"
+                    />
+                  </div>
+
+                  <div>
+                    <Label htmlFor="date">Date</Label>
+                    <Input
+                      id="date"
+                      type="date"
+                      value={date}
+                      onChange={(e) => setDate(e.target.value)}
+                      className="my-3"
+                    />
+                  </div>
+
+                  <div>
+                    <Label>Category</Label>
+                    <Select value={category} onValueChange={setCategory}>
+                      <SelectTrigger className="my-3">
+                        <SelectValue placeholder="Select category" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {categories.map((cat) => {
+                            const IconComponent = categoryIcons[cat.value]
+                            return <SelectItem key={cat.value} value={cat.value}>
+                                <div className="flex items-center gap-2">
+                                  <IconComponent className="w-4 h-4" />
+                                  {cat.label}
+                                </div>
+                            </SelectItem>
+                        })}
+                      </SelectContent>
+                    </Select>
+                  </div>
+
+                  <div>
+                    <Label>Family Member</Label>
+                    <Select value={memberId} onValueChange={setMemberId}>
+                      <SelectTrigger className="my-3">
+                        <SelectValue placeholder="Select member" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {familyMembers.map((m) => (
+                          <SelectItem key={m.id} value={m.id}>
+                            <div className="flex items-center gap-2">
+                              <span>{m.avatar}</span>
+                              {m.name}
+                            </div>
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                </div>
+
+                <Button
+                  type="submit"
+                  className="w-full btn-gradient-primary"
+                >
+                  Update Expense
+                </Button>
+              </form>
+          </DialogContent>
+        </Dialog>
       </div>
     </AppLayout>
   );

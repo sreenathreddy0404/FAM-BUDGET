@@ -51,16 +51,16 @@ const getDashboardData = async (req, res) => {
         // Get 5 recent transactions
         const recentExpenses = await Expense.find({ userId: userId })
             .sort({ date: -1 })
-            .limit(5)
+            .limit(4)
             .populate('memberId');
 
         res.json({
             success: true,
             data: {
-                "This Month Expenses": totalThisMonthExpenses,
-                "Previous Month Expenses": totalPreviousMonthExpenses,
-                "This Year Expenses": totalYearlyExpenses,
-                "Previous Year Expenses": totalPreviousYearExpenses,
+                "This Month Expenses": Number(totalThisMonthExpenses.toFixed(2)),
+                "Previous Month Expenses": Number(totalPreviousMonthExpenses.toFixed(2)),
+                "This Year Expenses": Number(totalYearlyExpenses.toFixed(2)),
+                "Previous Year Expenses": Number(totalPreviousYearExpenses.toFixed(2)),
                 "Daily Average Expenses": Number(dailyAverage.toFixed(2)),
                 "Monthly Average Expenses": Number(monthlyAverage.toFixed(2)),
                 "Total Transactions": totalTransactions,

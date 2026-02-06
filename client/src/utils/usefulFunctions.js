@@ -7,16 +7,42 @@ import {
 	eachMonthOfInterval,
 } from "date-fns";
 
+import { ShoppingBag, Utensils, Car, Zap, Film, ShoppingCart, HeartPulse, GraduationCap, MoreHorizontal } from "lucide-react";
+
+export const categoryIcons = {
+	Groceries: ShoppingCart,
+	Dining: Utensils,
+	Transport: Car,
+	Utilities: Zap,
+	Healthcare: HeartPulse,
+	Entertainment: Film,
+	Shopping: ShoppingBag,
+	Education: GraduationCap,
+	Other: MoreHorizontal,
+};
+
+export const categories = [
+    { value: "Groceries", label: "Groceries"},
+    { value: "Dining", label: "Dining"},
+    { value: "Transport", label: "Transport"},
+    { value: "Utilities", label: "Utilities"},
+    { value: "Healthcare", label: "Healthcare"},
+    { value: "Entertainment", label: "Entertainment"},
+    { value: "Shopping", label: "Shopping"},
+    { value: "Education", label: "Education"},
+    { value: "Other", label: "Other"},
+];
+
 export const categoryColors = {
-  Groceries: "hsl(120, 55%, 55%)",
-  Food: "hsl(25, 85%, 55%)",
-  Transport: "hsl(210, 70%, 45%)",
-  Utilities: "hsl(45, 90%, 50%)",
-  Entertainment: "hsl(270, 65%, 60%)",
-  Shopping: "hsl(330, 70%, 60%)",
-  Education: "hsl(200, 80%, 50%)",
-  Healthcare: "hsl(0, 65%, 55%)",
-  Other: "hsl(30, 40%, 65%)"
+  Groceries: "bg-green-100 text-green-600",
+	Dining: "bg-orange-100 text-orange-600",
+	Transport: "bg-blue-100 text-blue-600",
+	Utilities: "bg-yellow-100 text-yellow-700",
+	Healthcare: "bg-red-100 text-red-600",
+	Entertainment: "bg-purple-100 text-purple-600",
+	Shopping: "bg-pink-100 text-pink-600",
+	Education: "bg-indigo-100 text-indigo-600",
+	Other: "bg-gray-100 text-gray-600",
 };
 
 export const months = [

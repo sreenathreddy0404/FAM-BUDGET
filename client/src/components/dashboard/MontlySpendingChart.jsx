@@ -13,7 +13,7 @@ const MontlySpendingChart = ({expensesData}) => {
       transition={{ duration: 0.4, delay: 0.2 }}
       className="card-elevated p-6"
     >
-      <h2 className="text-lg font-semibold text-foreground mb-6">
+      <h2 className="text-lg font-semibold text-foreground mb-8">
         Monthly Spending Trend
       </h2>
       <div className="h-64">

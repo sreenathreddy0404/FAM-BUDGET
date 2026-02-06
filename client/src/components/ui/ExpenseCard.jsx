@@ -1,49 +1,12 @@
 import React from 'react'
 import { motion } from 'framer-motion';
-import {
-	ShoppingCart,
-	Utensils,
-	Car,
-	Zap,
-	HeartPulse,
-	Film,
-	ShoppingBag,
-	GraduationCap,
-	MoreHorizontal,
-} from "lucide-react";
-
-import  formatDate  from '../../utils/formatDate';
-
-
-export const categoryIcons = {
-	GROCERIES: ShoppingCart,
-	DINING: Utensils,
-	TRANSPORT: Car,
-	UTILITIES: Zap,
-	HEALTHCARE: HeartPulse,
-	ENTERTAINMENT: Film,
-	SHOPPING: ShoppingBag,
-	EDUCATION: GraduationCap,
-	OTHER: MoreHorizontal,
-};
-
-
-export const categoryColors = {
-	GROCERIES: "bg-green-100 text-green-600",
-	DINING: "bg-orange-100 text-orange-600",
-	TRANSPORT: "bg-blue-100 text-blue-600",
-	UTILITIES: "bg-yellow-100 text-yellow-700",
-	HEALTHCARE: "bg-red-100 text-red-600",
-	ENTERTAINMENT: "bg-purple-100 text-purple-600",
-	SHOPPING: "bg-pink-100 text-pink-600",
-	EDUCATION: "bg-indigo-100 text-indigo-600",
-	OTHER: "bg-gray-100 text-gray-600",
-};
-
+import { formatDate }  from '../../utils/formatDate';
+import { categoryColors,categoryIcons } from '@/utils/usefulFunctions';
+import { ShoppingBag } from 'lucide-react';
   
 const ExpenseCard = ({ expense, index }) => {
-	const Icon = categoryIcons[expense.category.toUpperCase()] || ShoppingBag;
-	const colorClass = categoryColors[expense.category.toUpperCase()] || "bg-muted text-muted-foreground";
+	const Icon = categoryIcons[expense.category] || ShoppingBag;
+	const colorClass = categoryColors[expense.category] || "bg-muted text-muted-foreground";
     return (
             <motion.div
                 key={expense.id}

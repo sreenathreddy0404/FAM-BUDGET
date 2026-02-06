@@ -6,7 +6,7 @@ const createExpense = async (req, res) => {
         const { name, amount, date, category, memberId } = req.body;
         const userId = req.userId;
         const expense = await Expense.create({ name, amount, date, category, memberId, userId });
-        res.status(201).json({ success: true, message: "Expense created successfully!", expense });
+        res.status(201).json({ success: true, message: "Expense created successfully!", data:expense });
     } catch (e) {
         return res.status(500).json({ success: false, message: "Server error", error: e.message });
     }
@@ -17,7 +17,7 @@ const getExpenses = async (req, res) => {
     try {
         const userId = req.userId;
         const expenses = await Expense.find({ userId }).populate('memberId').sort({ date: 1 });
-        res.status(200).json({ success: true, expenses });
+        res.status(200).json({ success: true, data:expenses });
     } catch (e) {
         return res.status(500).json({ success: false, message: "Server error", error: e.message });
     }
@@ -37,7 +37,7 @@ const updateExpense = async (req, res) => {
         if (!expense) {
             return res.status(404).json({ success: false, message: "Expense not found or unauthorized access" });
         }
-        res.status(200).json({ success: true, message: "Expense updated successfully!", expense });
+        res.status(200).json({ success: true, message: "Expense updated successfully!", data:expense });
     } catch (e) {
         return res.status(500).json({ success: false, message: "Server error", error: e.message });
     }

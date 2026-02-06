@@ -1,4 +1,4 @@
-function formatDate(dateStr) {
+export const formatDate = (dateStr) => {
   const inputDate = new Date(dateStr);
   const today = new Date();
 
@@ -16,6 +16,12 @@ function formatDate(dateStr) {
   return inputDate.toLocaleDateString("en-US", {
     month: "short",
     day: "numeric",
+    year: "numeric"
   });
 }
-export default formatDate;
+
+//get date in yyyyMMdd format
+export const yyyyMMddFormat = (date)=>{
+  const d = new Date(date);
+	return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+}

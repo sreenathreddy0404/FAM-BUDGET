@@ -26,12 +26,15 @@ api.interceptors.response.use((response)=>response,
     } 
 )
 
+//authentication routes
 export const registerUser = (userData) => api.post('/auth/register', userData);
 export const loginUser = (userData) => api.post('/auth/login', userData);
 
 //expenses routes
-export const addExpense = (expenseData) => api.post('/expenses', expenseData);
+export const addExpense = (newExpense) => api.post('/expenses', newExpense);
 export const getExpenses = () => api.get('/expenses');
+export const updateExpense = (id,newExpenseData) => api.put(`/expenses/${id}`,newExpenseData);
+export const deleteExpense = (id) => api.delete(`/expenses/${id}`); 
 export const getExpensesByYear = (year) => api.get(`/expenses/year/${year}`);
 export const getExpensesByYearAndMonth = (year,month) => api.get(`/expenses/year-month/${year}/${month}`);
 

@@ -4,78 +4,48 @@ import { AppLayout } from "@/components/layouts/AppLayout";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Receipt, Upload, PenLine, ShoppingBag, Utensils, Car, Zap, Film,ShoppingCart,HeartPulse,GraduationCap,MoreHorizontal } from "lucide-react";
+import { Receipt, Upload, PenLine } from "lucide-react";
 import { toast } from "react-hot-toast";
+import { categories, categoryIcons } from "@/utils/usefulFunctions";
 import { familyMembers as members } from "@/dummyData/allExpensesData";
-
-
-export const categoryIcons = {
-	Groceries: ShoppingCart,
-	Dining: Utensils,
-	Transport: Car,
-	Utilities: Zap,
-	Healthcare: HeartPulse,
-	Entertainment: Film,
-	Shopping: ShoppingBag,
-	Education: GraduationCap,
-	Other: MoreHorizontal,
-};
-export const categories = [
-    { value: "Groceries", label: "Groceries"},
-    { value: "Dining", label: "Dining"},
-    { value: "Transport", label: "Transport"},
-    { value: "Utilities", label: "Utilities"},
-    { value: "Healthcare", label: "Healthcare"},
-    { value: "Entertainment", label: "Entertainment"},
-    { value: "Shopping", label: "Shopping"},
-    { value: "Education", label: "Education"},
-    { value: "Other", label: "Other"},
-];
+import { useFamily } from "@/context/FamilyContext";
+import { addExpense } from "@/api/api";
 
 const AddExpense = () => {
-  const [store, setStore] = useState("");
+  const [name, setName] = useState("");
   const [amount, setAmount] = useState("");
   const [date, setDate] = useState(new Date().toISOString().split("T")[0]);
   const [category, setCategory] = useState("");
   const [memberId, setMemberId] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
+  const { familyMembers, fetchFamilyMembers } = useFamily();
+
   const handleManualSubmit = async (e) => {
     e.preventDefault();
     
-    if (!store || !amount || !category || !memberId) {
+    if (!name || !amount || !category || !memberId) {
       toast.error("Please fill in all fields");
       return;
     }
 
     setIsSubmitting(true);
 
-    const member = members.find((m) => m.id === memberId)?.name || "Unknown";
-    const avatar = members.find((m) => m.id === memberId)?.avatar || "❓";
     const newExpense = {
-      store,
+      name,
       amount: parseFloat(amount),
       date,
       category,
-      member,
-      avatar,
+      memberId
     };
 
-    console.log("Submitting expense:", newExpense);
-    
-    // Simulate API call
-    await new Promise((resolve) => setTimeout(resolve, 1000));
+    await addExpense(newExpense);
+    await fetchFamilyMembers();
     
     toast.success("Expense added successfully!");
-    setStore("");
+    setName("");
     setAmount("");
     setCategory("");
     setMemberId("");
@@ -123,9 +93,9 @@ const AddExpense = () => {
                   <div className="md:col-span-2">
                     <Label htmlFor="store">Store Name</Label>
                     <Input
-                      id="store"
-                      value={store}
-                      onChange={(e) => setStore(e.target.value)}
+                      id="name"
+                      value={name}
+                      onChange={(e) => setName(e.target.value)}
                       placeholder="e.g., Walmart, Shell Gas Station"
                       className="mt-2"
                     />
@@ -183,7 +153,7 @@ const AddExpense = () => {
                         <SelectValue placeholder="Select member" />
                       </SelectTrigger>
                       <SelectContent>
-                        {members.map((m) => (
+                        {familyMembers.map((m) => (
                           <SelectItem key={m.id} value={m.id}>
                             <div className="flex items-center gap-2">
                               <span>{m.avatar}</span>

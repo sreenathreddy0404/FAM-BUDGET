@@ -9,6 +9,7 @@ import { Wallet, Mail, Lock, User, ArrowLeft } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { loginUser,registerUser } from "@/api/api";
 import { useAuth } from "@/context/AuthContext";
+import { useFamily } from "@/context/FamilyContext";
 import toast from "react-hot-toast";
 
 const Auth = () => {
@@ -22,6 +23,8 @@ const Auth = () => {
     password: "",
     confirmPassword: "",
   });
+
+  const { fetchFamilyMembers } = useFamily();
 
   useEffect(() => {
     setIsSignUp(searchParams.get("mode") === "signup");
@@ -56,11 +59,14 @@ const Auth = () => {
         if(response.data.success){
           login(response.data.token,response.data.username);
           toast.success("Login successful.");
+          
           navigate("/dashboard");
         } else{
           toast.error("Login failed: " + response.data.message);
         }
       }
+
+      await fetchFamilyMembers();
     }catch(e){
       toast.error("Login failed: " + (e.response?.data?.message || e.message));
     }
