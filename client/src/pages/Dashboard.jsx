@@ -21,14 +21,22 @@ import {
 const Dashboard = () => {
 	const [dashboardData, setDashboardData] = useState(null);
 	const [expensesData,setExpensesData] = useState([]);
+	const [isLoading, setIsLoading] = useState([]);
 
 	useEffect(() => {
 	const fetchData = async () => {
-		const res = await getDashboardData();
-		setDashboardData(res.data.data);
+		try{
+			setIsLoading(true);
+			const res = await getDashboardData();
+			setDashboardData(res.data.data);
 
-		const res2 = await getExpensesByYear(new Date().getFullYear());
-		setExpensesData(res2.data.data);
+			const res2 = await getExpensesByYear(new Date().getFullYear());
+			setExpensesData(res2.data.data);
+		}catch(e){
+			console.log("Error in fetching dashboard data");
+		}finally{
+			setIsLoading(false);
+		}
 	};
 	fetchData();
 	}, []);
@@ -46,6 +54,19 @@ const Dashboard = () => {
 	: [];
 
 	const recentExpenses = dashboardData?.recentExpenses || [];
+
+	if (isLoading) {
+		return (
+			<AppLayout>
+				<div className="card-elevated p-6">
+					<div className="animate-pulse space-y-4">
+						<div className="h-6 bg-muted rounded w-1/3"></div>
+						<div className="h-72 bg-muted rounded"></div>
+					</div>
+				</div>
+			</AppLayout>
+		);
+	}
 	
   	return (
 		<AppLayout>
@@ -69,7 +90,7 @@ const Dashboard = () => {
 				</div>
 
 				{/* stats data can go here*/}
-				<div className="grid lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1 gap-4">
+				<div className="grid lg:grid-cols-4 md:grid-cols-3 sm:grid-cols-2 gap-4">
 					{statCardsData.map(
 						({ id, label, value, icon }) => (
 							<StatCard

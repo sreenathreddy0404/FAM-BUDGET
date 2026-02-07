@@ -2,7 +2,7 @@ import React from 'react'
 import { motion } from 'framer-motion';
 import { TrendingUp, TrendingDown } from 'lucide-react';
 
-const FamilyMemberCard = ({ member,page}) => {
+const FamilyMemberCard = ({ member}) => {
   return (
     <motion.div
         initial={{ opacity: 0, y: 20 }}
@@ -13,19 +13,19 @@ const FamilyMemberCard = ({ member,page}) => {
     >
         <div className="flex items-center gap-4 border-border border-b-2">
             <div className='flex items-center gap-2 p-2 '>
-                <div className='w-15 h-15 flex items-center justify-center bg-accent rounded-full'>
-                    <span className='text-[30px]'>{member.avatar}</span>
+                <div className='w-12 h-12 flex items-center justify-center bg-accent rounded-full'>
+                    <span className='text-[25px]'>{member.avatar}</span>
                 </div>
                 <div>
-                    <h2 className="text-lg font-semibold text-foreground mt-2">{member.name}</h2>
-                    <p className='text-muted-foreground text-sm'>{page == "Dashboard" ? member.lastExpense : "Family Member"}</p>
+                    <h2 className="text-md font-semibold text-foreground mt-2">{member.name}</h2>
+                    <p className='text-muted-foreground text-sm'>{member.lastExpense}</p>
                 </div>
             </div>
         </div>
         <div className="flex items-center justify-between">
             <div>
                 <p className="text-sm text-muted-foreground mt-4">This Month</p>
-                <h2 className="text-2xl font-bold text-foreground">${member.totalSpent}</h2>
+                <h2 className="text-xl font-bold text-foreground">${member.totalSpent}</h2>
             </div>
             <div className='flex items-center justify-center gap-2'>
                 <p>{member.trend == "up" ? <TrendingUp className='w-5 h-5 text-red-600'/>:<TrendingDown className='w-5 h-5 text-green-600'/>}</p>

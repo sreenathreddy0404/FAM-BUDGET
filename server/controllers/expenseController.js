@@ -16,7 +16,7 @@ const createExpense = async (req, res) => {
 const getExpenses = async (req, res) => {
     try {
         const userId = req.userId;
-        const expenses = await Expense.find({ userId }).populate('memberId').sort({ date: 1 });
+        const expenses = await Expense.find({ userId }).populate('memberId').sort({ date: -1 });
         res.status(200).json({ success: true, data:expenses });
     } catch (e) {
         return res.status(500).json({ success: false, message: "Server error", error: e.message });
@@ -62,8 +62,8 @@ const getExpensesByYearAndMonth = async (req, res) => {
     try {
         const { year, month } = req.params;
         const userId = req.userId;
-        const startDate = new Date(year, month - 1, 1);
-        const endDate = new Date(year, month, 0, 23, 59, 59);
+        const startDate = new Date(year, month, 1);
+        const endDate = new Date(year, month+1, 0, 23, 59, 59);
         const expenses = await Expense.find({
             userId,
             date: {

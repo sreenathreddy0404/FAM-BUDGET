@@ -16,8 +16,8 @@ const StatCard = (props) => {
     >
         <div className="flex justify-between items-center mb-2">
             <div>
-                <h3 className="text-lg font-semibold text-foreground">{props.title}</h3>
-                <p className="text-2xl font-bold mt-2">{props.value}</p>
+                <h3 className="text-md font-semibold text-foreground">{props.title}</h3>
+                <p className="text-xl font-bold mt-2">{props.value}</p>
             </div>
             <div className="w-10 h-10 bg-accent rounded-lg flex items-center justify-center mt-4">
                 <props.icon className="w-5 h-5 text-primary" />

@@ -1,16 +1,16 @@
 import {AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer} from 'recharts';
 import { motion } from 'framer-motion';
 
-const Areachart = ({data}) => {
+const Areachart = ({data, selectedYear, selectedMonth}) => {
   return (
         <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.4, delay: 0.2 }}
-            className="card-elevated p-6"
+            className="card-elevated p-6 mt-10 mt-5"
         >
       <h2 className="text-lg font-semibold text-foreground mb-6">
-        Monthly Spending Trend
+        Monthly Spending Trend - {selectedMonth} {selectedYear}
       </h2>
       <div className="h-64">
         <ResponsiveContainer width="100%" height="100%">
@@ -43,7 +43,7 @@ const Areachart = ({data}) => {
                 borderRadius: "12px",
                 boxShadow: "0 4px 6px -1px rgba(0, 0, 0, 0.1)",
               }}
-              formatter={(value) => [`$${value}`, "Spent"]}
+              formatter={(value) => [`$${value.toFixed(2)}`, "Spent"]}
             />
             <Area
               type="monotone"

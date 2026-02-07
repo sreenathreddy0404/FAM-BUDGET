@@ -41,10 +41,6 @@ const LandingPage = () => {
 						transition={{ duration: 0.6 }}
 						className="text-center max-w-3xl mx-auto"
 					>
-						<div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-accent text-accent-foreground text-sm font-medium mb-6">
-							<Sparkles className="w-4 h-4" />
-							Smart Family Expense Tracking
-						</div>
 						<h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold text-foreground leading-tight">
 							Track Your Family's{" "}
 							<span className="text-primary">Expenses</span>{" "}

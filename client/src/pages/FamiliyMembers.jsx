@@ -200,15 +200,15 @@ const FamilyMembers = () => {
 
 							<div className="mt-4 grid grid-cols-2 border-t pt-4">
 								<div>
-									<p className="text-xs text-muted-foreground">
+									<p className="text-sm text-muted-foreground">
 										Total Spent
 									</p>
-									<p className="font-bold">
+									<p className="font-bold text-xl">
 										${member.totalSpent?.toLocaleString()}
 									</p>
 								</div>
 								<div className="text-right">
-									<p className="text-xs text-muted-foreground">
+									<p className="text-sm text-muted-foreground">
 										Trend
 									</p>
 									<div

@@ -7,125 +7,19 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from "@/components/ui/select";
-import {
-	format,
-	parseISO,
-	startOfMonth,
-	endOfMonth,
-	eachDayOfInterval,
-	isSameDay,
-} from "date-fns";
 import { allExpenses } from "@/dummyData/allExpensesData";
 import Barchart1 from "./Barchart1";
 import Piechart from "./Piechart";
 import Barchart2 from "./Barchart2";
-import {months,categoryColors} from "@/utils/usefulFunctions";
+import {months,chartCategoryColors,getCategoryData,getMemberData,getMonthlyData} from "@/utils/usefulFunctions";
+import { getExpensesByYearAndMonth } from "@/api/api";
+import NoExpenses from "../ui/NoExpenses";
 
 const currentYear = new Date().getFullYear();
 export const years = Array.from({ length: 5 }, (_, i) => ({
 	value: String(currentYear - i),
 	label: String(currentYear - i),
 }));
-
-
-// Function to fetch expenses for a specific month and year
-const fetchExpensesForMonth = async (month, year) => {
-	try {
-		// For now, filter the mock data based on month and year
-		const filteredData = allExpenses.filter((expense) => {
-			const expenseDate = parseISO(expense.date);
-			return (
-				expenseDate.getMonth() === month &&
-				expenseDate.getFullYear() === year
-			);
-		});
-
-		// Simulate API delay
-		await new Promise((resolve) => setTimeout(resolve, 300));
-
-		return filteredData;
-	} catch (error) {
-		console.error("Error fetching expenses:", error);
-		return [];
-	}
-};
-
-// Function to get category data for pie chart
-const getCategoryData = (expenses) => {
-	const categoryMap = {};
-
-	expenses.forEach((expense) => {
-		if (!categoryMap[expense.category]) {
-			categoryMap[expense.category] = 0;
-		}
-		categoryMap[expense.category] += Number(expense.amount);
-	});
-
-
-	return Object.entries(categoryMap).map(([name, value]) => ({
-		name,
-		value: parseFloat(value.toFixed(2)),
-		color: categoryColors[name] || "hsl(200, 70%, 50%)",
-	}));
-};
-
-// Function to get member comparison data
-const getMemberData = (expenses) => {
-	const memberMap = {};
-	
-	// Get all unique categories from expenses
-	const allCategories = [...new Set(expenses.map(expense => expense.category))];
-
-	// Initialize all members with all categories found
-	expenses.forEach((expense) => {
-		if (!memberMap[expense.member]) {
-			memberMap[expense.member] = {
-				name: expense.member,
-				...Object.fromEntries(allCategories.map(category => [category, 0]))
-			};
-		}
-		memberMap[expense.member][expense.category] += Number(expense.amount);
-	});
-
-	// Convert to array and format numbers
-	return Object.values(memberMap).map((member) => {
-		const formattedMember = { name: member.name };
-		allCategories.forEach(category => {
-			formattedMember[category] = parseFloat((member[category] || 0).toFixed(2));
-		});
-		return formattedMember;
-	});
-};
-
-// Function to get daily spending data for the selected month
-const getMonthlyData = (selectedMonth, selectedYear, expenses) => {
-	const month = parseInt(selectedMonth);
-	const year = parseInt(selectedYear);
-	const startDate = startOfMonth(new Date(year, month));
-	const endDate = endOfMonth(new Date(year, month));
-	const allDays = eachDayOfInterval({ start: startDate, end: endDate });
-
-	const dailyTotals = allDays.map((day) => {
-		const dayExpenses = expenses.filter((expense) => {
-			const expenseDate = parseISO(expense.date); 
-			return isSameDay(expenseDate, day);
-		});
-
-		const total = dayExpenses.reduce(
-			(sum, exp) => sum + Number(exp.amount),
-			0,
-		);
-
-		return {
-			day: format(day, "d"),
-			date: format(day, "MMM d"),
-			amount: total,
-		};
-	});
-
-	return dailyTotals;
-};
-
 
 export const MonthlySpendingChart = () => {
 	const [selectedMonth, setSelectedMonth] = useState(String(new Date().getMonth()),);
@@ -136,16 +30,19 @@ export const MonthlySpendingChart = () => {
 	// Fetch expenses when month or year changes
 	useEffect(() => {
 		const loadExpenses = async () => {
-			setIsLoading(true);
-			const month = parseInt(selectedMonth);
-			const year = parseInt(selectedYear);
-			const data = await fetchExpensesForMonth(month, year);
-			setExpenses(data);
-			setIsLoading(false);
+			try {
+				setIsLoading(true);
+				const res = await getExpensesByYearAndMonth(Number(selectedYear),Number(selectedMonth));
+				setExpenses(res.data.data);
+			} catch (err) {
+				console.error(err);
+			} finally {
+				setIsLoading(false);
+			}
 		};
 
 		loadExpenses();
-	}, [selectedMonth, selectedYear]);
+	}, [selectedMonth,selectedYear]);
 
 	
 	const data = getMonthlyData(selectedMonth, selectedYear, expenses);
@@ -154,7 +51,7 @@ export const MonthlySpendingChart = () => {
 	const maxDay = data.reduce((max, d) => (d.amount > max.amount ? d : max), {amount: 0,date: "",});
 	const categoryData = getCategoryData(expenses);
 	const memberData = getMemberData(expenses);
-
+	const monthShortForm = months[parseInt(selectedMonth)].label;
 	if (isLoading) {
 		return (
 			<div className="card-elevated p-6">
@@ -251,45 +148,40 @@ export const MonthlySpendingChart = () => {
 				</motion.div>
 			</div>
 
-			{/* Daily Spending Chart */}
-			<motion.div
-				initial={{ opacity: 0, y: 20 }}
-				animate={{ opacity: 1, y: 0 }}
-				transition={{ duration: 0.4, delay: 0.3 }}
-				className="card-elevated p-6"
-			>
-				<h2 className="text-lg font-semibold text-foreground mb-6">
-					Daily Spending - {months[parseInt(selectedMonth)].label}{" "}
-					{selectedYear}
-				</h2>
-				<Barchart1 data={data} />
-			</motion.div>
+			{expenses.length == 0 && (
+				<NoExpenses
+					selectedYear={selectedYear}
+					selectedMonth={monthShortForm}
+				/>
+			)}
 
-			{/* Category Breakdown */}
-			<motion.div
-				initial={{ opacity: 0, y: 20 }}
-				animate={{ opacity: 1, y: 0 }}
-				transition={{ duration: 0.4, delay: 0.3 }}
-				className="card-elevated p-6"
-			>
-				<h2 className="text-lg font-semibold text-foreground mb-6">
-					Spending by Category
-				</h2>
-				<Piechart categoryData={categoryData} totalSpending={totalSpending} />
-			</motion.div>
+			{expenses.length > 0 && (
+				<>
+					{/* Daily Spending Chart */}
+					<Barchart1
+						data={data}
+						selectedYear={selectedYear}
+						selectedMonth={monthShortForm}
+					/>
 
-			{/* Member Comparison */}
-			<motion.div
-				initial={{ opacity: 0, y: 20 }}
-				animate={{ opacity: 1, y: 0 }}
-				transition={{ duration: 0.4, delay: 0.4 }}
-				className="card-elevated p-6"
-			>
-				<h2 className="text-lg font-semibold text-foreground mb-6">
-					Spending by Family Member
-				</h2>
-				<Barchart2 memberData={memberData} categoryData={categoryData} barChartColors={categoryColors} />
-			</motion.div>
+					{/* Category Breakdown */}
+					<Piechart
+						categoryData={categoryData}
+						totalSpending={totalSpending}
+						selectedYear={selectedYear}
+						selectedMonth={monthShortForm}
+					/>
+
+					{/* Member Comparison */}
+					<Barchart2
+						memberData={memberData}
+						categoryData={categoryData}
+						barChartColors={chartCategoryColors}
+						selectedYear={selectedYear}
+						selectedMonth={monthShortForm}
+					/>
+				</>
+			)}
 		</div>
 	);
 };

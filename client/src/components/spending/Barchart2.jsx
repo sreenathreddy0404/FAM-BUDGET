@@ -1,7 +1,17 @@
 import React from 'react'
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from 'recharts';
-const Barchart2 = ({ memberData, categoryData, barChartColors }) => {
+import { motion } from 'framer-motion';
+const Barchart2 = ({ memberData, categoryData, barChartColors,selectedYear, selectedMonth }) => {
   return (
+	<motion.div
+		initial={{ opacity: 0, y: 20 }}
+		animate={{ opacity: 1, y: 0 }}
+		transition={{ duration: 0.4, delay: 0.5 }}
+		className="card-elevated p-6 mt-5"
+	>
+		<h2 className="text-lg font-semibold text-foreground mb-6">
+			Spending by Family Member - {selectedMonth} {selectedYear}
+		</h2>
 		<div className="h-90 flex flex-col gap-4">
 			<ResponsiveContainer width="100%" height="90%">
 				<BarChart data={memberData} layout="vertical">
@@ -56,6 +66,7 @@ const Barchart2 = ({ memberData, categoryData, barChartColors }) => {
 				))}
 			</div>
 		</div>
+	</motion.div>
   );
 }
 
