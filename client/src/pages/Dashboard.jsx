@@ -17,11 +17,14 @@ import {
 	Receipt,
 	Users,
 } from "lucide-react";
+import { useFamily } from '@/context/FamilyContext';
 
 const Dashboard = () => {
 	const [dashboardData, setDashboardData] = useState(null);
 	const [expensesData,setExpensesData] = useState([]);
 	const [isLoading, setIsLoading] = useState([]);
+
+	const { familyMembers } = useFamily();
 
 	useEffect(() => {
 	const fetchData = async () => {
@@ -67,6 +70,28 @@ const Dashboard = () => {
 			</AppLayout>
 		);
 	}
+
+	{/* No FamilyMembers created */}
+	if(familyMembers.length == 0){return (
+			<AppLayout>
+			<div className="min-h-screen flex flex-col items-center justify-center text-center p-8">
+				<div className="w-20 h-20 rounded-full bg-gradient-to-br from-gray-100 to-gray-200 flex items-center justify-center mb-6">
+					<span className="text-4xl">👨‍👩‍👧‍👦</span>
+				</div>
+
+				<h3 className="text-xl font-semibold text-gray-800 mb-2">
+					No Family Members Yet
+				</h3>
+
+				<p className="text-gray-600 text-left text-md  mb-6 max-w-6xl">
+					👉 First, add your family members on the Family Members page. <br />
+					👉 Next, record expenses for each member using the Add Expenses page. <br />
+					👉 Then, head over to the Dashboard to view and analyze your expense data.
+				</p>
+			</div>
+			</AppLayout>
+		);
+	}
 	
   	return (
 		<AppLayout>
@@ -78,7 +103,7 @@ const Dashboard = () => {
 						transition={{ duration: 0.5,delay:0.5 }}
 						className="text-2xl font-bold"
 					>
-						Welcome back! 👋
+						Welcome back! {JSON.parse(localStorage.getItem("user"))}👋
 					</motion.h2>
 					<p className="text-muted-foreground">
 						Here's your family's spending overview for{" "}

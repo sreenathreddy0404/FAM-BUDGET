@@ -62,8 +62,10 @@ const getExpensesByYearAndMonth = async (req, res) => {
     try {
         const { year, month } = req.params;
         const userId = req.userId;
-        const startDate = new Date(year, month, 1);
-        const endDate = new Date(year, month+1, 0, 23, 59, 59);
+        const yearNum = Number(year);
+        const monthNum = Number(month);
+        const startDate = new Date(yearNum, monthNum, 1);
+        const endDate = new Date(yearNum, monthNum+1, 0, 23, 59, 59);
         const expenses = await Expense.find({
             userId,
             date: {
@@ -81,8 +83,9 @@ const getExpensesByYear = async (req, res) => {
     try {
         const { year } = req.params;
         const userId = req.userId;
-        const startDate = new Date(year, 0, 1);
-        const endDate = new Date(year, 11, 31, 23, 59, 59);
+        const yearNum = Number(year);
+        const startDate = new Date(yearNum, 0, 1);
+        const endDate = new Date(yearNum, 11, 31, 23, 59, 59);
         const expenses = await Expense.find({
             userId,
             date: {

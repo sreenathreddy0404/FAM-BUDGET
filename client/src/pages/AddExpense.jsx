@@ -7,11 +7,12 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Receipt, Upload, PenLine } from "lucide-react";
-import { toast } from "react-hot-toast";
+import  toast  from "react-hot-toast";
 import { categories, categoryIcons } from "@/utils/usefulFunctions";
 import { familyMembers as members } from "@/dummyData/allExpensesData";
 import { useFamily } from "@/context/FamilyContext";
 import { addExpense } from "@/api/api";
+import { UploadInvoice } from "@/components/addExpense/UploadInvoice";
 
 const AddExpense = () => {
   const [name, setName] = useState("");
@@ -53,7 +54,7 @@ const AddExpense = () => {
   };
 
   const handleInvoiceUpload = () => {
-    toast.info("Invoice upload feature coming soon! This will use OCR to extract expense data automatically.");
+    toast("Invoice upload feature coming soon! This will use OCR to extract expense data automatically.");
   };
 
   return (
@@ -177,36 +178,7 @@ const AddExpense = () => {
             </TabsContent>
 
             <TabsContent value="invoice">
-              <div className="text-center py-12">
-                <motion.div
-                  initial={{ scale: 0.9 }}
-                  animate={{ scale: 1 }}
-                  transition={{ duration: 0.3 }}
-                  className="w-24 h-24 mx-auto mb-6 rounded-2xl bg-accent flex items-center justify-center"
-                >
-                  <Upload className="w-12 h-12 text-accent-foreground" />
-                </motion.div>
-                <h3 className="text-xl font-semibold text-foreground mb-2">
-                  Upload Invoice
-                </h3>
-                <p className="text-muted-foreground mb-6 max-w-sm mx-auto">
-                  Take a photo or upload an invoice image. We'll automatically extract the expense details using OCR.
-                </p>
-                <div className="border-2 border-dashed border-border rounded-2xl p-8 hover:border-primary/50 transition-colors cursor-pointer"
-                  onClick={handleInvoiceUpload}
-                >
-                  <Receipt className="w-10 h-10 text-muted-foreground mx-auto mb-3" />
-                  <p className="text-sm text-muted-foreground">
-                    Click to upload or drag and drop
-                  </p>
-                  <p className="text-xs text-muted-foreground mt-1">
-                    PNG, JPG up to 10MB
-                  </p>
-                </div>
-                <p className="text-xs text-muted-foreground mt-4">
-                  📝 Invoice images are only used for extraction and are not stored
-                </p>
-              </div>
+              <UploadInvoice/>
             </TabsContent>
           </Tabs>
         </motion.div>

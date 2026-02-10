@@ -46,3 +46,12 @@ export const deleteFamilyMember = (id) => api.delete(`/family-members/${id}`);
 
 //dashboard routes
 export const getDashboardData = ()=>api.get('/dashboard/statsdata');
+
+//ocr data extract routes
+export const extractData = (formData) => {
+  return api.post('/ocr/extract', formData, {
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+  });
+};
