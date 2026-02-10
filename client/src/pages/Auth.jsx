@@ -24,8 +24,6 @@ const Auth = () => {
     confirmPassword: "",
   });
 
-  const { fetchFamilyMembers } = useFamily();
-
   useEffect(() => {
     setIsSignUp(searchParams.get("mode") === "signup");
   }, [searchParams]);
@@ -65,8 +63,6 @@ const Auth = () => {
           toast.error("Login failed: " + response.data.message);
         }
       }
-
-      await fetchFamilyMembers();
     }catch(e){
       toast.error("Login failed: " + (e.response?.data?.message || e.message));
     }

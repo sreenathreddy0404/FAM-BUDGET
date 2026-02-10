@@ -26,7 +26,7 @@ const corsOptions = {
   allowedHeaders: ['Content-Type', 'Authorization'],
 };
 
-app.use(cors(corsOptions));
+app.use(cors());
 
 app.use('/api/auth',authRoutes);
 app.use('/api/family-members',authMiddleware,FamilyMemberRoutes);

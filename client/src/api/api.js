@@ -2,7 +2,7 @@ import axios from 'axios';
 
 //we use axios for http requests. It is an alternative way of fetch() api.
 const api = axios.create({
-    baseURL: 'http://localhost:5000/api',
+    baseURL: 'https://fam-budget-backend.onrender.com/api',
 });
 
 //request interceptor is attach JWT token to every request headers
@@ -20,7 +20,10 @@ api.interceptors.response.use((response)=>response,
         if(error.response?.status === 401){
             localStorage.removeItem('user');
             localStorage.removeItem('token');
-            window.location.href = '/auth';//Redirect to login page.
+            if (window.location.pathname !== '/auth') {
+                window.location.replace('/auth');
+            }
+
         }
         return Promise.reject(error);
     } 
