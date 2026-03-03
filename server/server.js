@@ -21,7 +21,10 @@ connectToDB();
 //Middleware to parse JSON bodies
 app.use(express.json());
 const corsOptions = {
-  origin: 'http://localhost:5173',
+  origin: [
+    'http://localhost:5173',
+    'https://fam-budget-3xsp.vercel.app'
+  ],
   methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization'],
 };
@@ -33,6 +36,7 @@ app.use('/api/family-members',authMiddleware,FamilyMemberRoutes);
 app.use('/api/expenses',authMiddleware,ExpenseRoutes);
 app.use('/api/dashboard',authMiddleware,DashboardRoutes);
 app.use('/api/ocr', authMiddleware,upload.single('receipt'),OCRServiceRoutes);
+app.get('/',(req,res)=>{res.send('Server is Live!');})
 
 //Start the server
 const PORT = process.env.PORT || 5000;

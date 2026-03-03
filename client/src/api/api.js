@@ -2,7 +2,7 @@ import axios from 'axios';
 
 //we use axios for http requests. It is an alternative way of fetch() api.
 const api = axios.create({
-    baseURL: 'https://fam-budget-backend.onrender.com/api',
+    baseURL: 'https://fam-budget-gray.vercel.app/api',
 });
 
 //request interceptor is attach JWT token to every request headers

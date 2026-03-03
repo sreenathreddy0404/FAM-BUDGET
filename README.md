@@ -8,8 +8,7 @@
 
 A modern web application for families to track, analyze, and manage household expenses collaboratively. Get real-time insights into spending patterns and make informed financial decisions together.
 
-![FamBudget Dashboard](https://img.shields.io/badge/Dashboard-Preview-blueviolet)
-![License](https://img.shields.io/badge/License-MIT-green)
+[Live Demo](https://fam-budget-3xsp.vercel.app/)
 
 ## Features
 
